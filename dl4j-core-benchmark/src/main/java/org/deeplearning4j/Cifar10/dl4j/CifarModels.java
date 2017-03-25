@@ -155,7 +155,7 @@ public class CifarModels {
         MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iterations)
-                .activation(activation)
+                .activation(Activation.fromString(activation))
                 .weightInit(weightInit)
 //                .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
                 .learningRate(learningRate).biasLearningRate(biasLearningRate)

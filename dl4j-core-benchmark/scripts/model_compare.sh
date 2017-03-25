@@ -15,8 +15,8 @@ case $platform in
     read -p "CPU, GPU, or MULTI? " dl
     case $dl in
         'CPU' ) time java -cp dl4j-core-benchmark/dl4j-core-benchmark.jar $dl4j_path --modelType $model_type;;
-        'GPU' ) echo $dl4j_warning && time java -cp dl4j-core-benchmark/dl4j-core-benchmark.jar $dl4j_path --modelType $model_typet;;
-        'MULTI' ) echo $dl4j_warning && time java -cp dl4j-core-benchmark/dl4j-core-benchmark.jar $dl4j_path --modelType $model_type -nGPU 12;;
+        'GPU' ) echo $dl4j_warning && time java -cp dl4j-core-benchmark/dl4j-core-benchmark.jar $dl4j_path --modelType $model_type;;
+        'MULTI' ) echo $dl4j_warning && time java -cp dl4j-core-benchmark/dl4j-core-benchmark.jar $dl4j_path --modelType $model_type -nGPU 8;;
          *) echo "Invalid response";;
     esac;;
 
