@@ -3,34 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Dl4j-Benchmarks</artifactId>
+        <artifactId>dl4j-core-benchmark</artifactId>
         <groupId>org.dl4j.benchmarks</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dl4j-core-benchmark</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>dl4j-core-benchmark-multigpus</module>
-    </modules>
+    <artifactId>dl4j-core-benchmark-multigpus</artifactId>
+
+    <properties>
+        <nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>
+    </properties>
 
     <dependencies>
-        <!--kohsuke-->
-        <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-            <version>2.32</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-parallel-wrapper_${scala.binary.version}</artifactId>
-            <version>${dl4j.version}</version>
-        </dependency>
 
     </dependencies>
+
     <build>
-        <finalName>dl4j-core-benchmark</finalName>
+        <finalName>dl4j-core-benchmark-multigpus</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -94,4 +84,6 @@
             </plugin>
         </plugins>
     </build>
+
+
 </project>
