@@ -195,7 +195,7 @@ public class Word2VecSentimentRNN {
                     dest.close();
                     fileCount++;
                 }
-                if(fileCount % 1000 == 0) System.out.print(".");
+                if(fileCount % 1000 == 0) System.out.print("");
             }
         }
 
