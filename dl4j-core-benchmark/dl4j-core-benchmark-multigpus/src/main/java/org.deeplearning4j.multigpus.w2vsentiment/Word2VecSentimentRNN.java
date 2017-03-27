@@ -23,6 +23,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**Example: Given a movie review (raw text), classify that movie review as either positive or negative based on the words it contains.
  * This is done by combining Word2Vec vectors and a recurrent neural network model. Each word in a review is vectorized
@@ -102,11 +103,12 @@ public class Word2VecSentimentRNN {
             .build();
 
         log.info("Starting training...");
+        long trainTime = System.currentTimeMillis();
         for (int i = 0; i < nEpochs; i++) {
             pw.fit(train);
             train.reset();
         }
-
+        trainTime = System.currentTimeMillis() - trainTime;
         log.info("Starting evaluation...");
 
         //Run evaluation. This is on 25k reviews, so can take some time
@@ -123,6 +125,15 @@ public class Word2VecSentimentRNN {
         }
 
         System.out.println(evaluation.stats());
+        printTime("Train", trainTime);
+    }
+
+    public static void printTime(String name, long ms){
+        log.info(name + " time: {} min, {} sec | {} milliseconds",
+                TimeUnit.MILLISECONDS.toMinutes(ms),
+                TimeUnit.MILLISECONDS.toSeconds(ms) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms)),
+                ms);
     }
 
 }

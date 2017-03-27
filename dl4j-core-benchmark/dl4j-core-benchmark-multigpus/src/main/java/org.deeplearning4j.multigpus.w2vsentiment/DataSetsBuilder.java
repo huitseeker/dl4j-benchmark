@@ -39,8 +39,8 @@ public class DataSetsBuilder {
     public static final String TEST_PATH = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "dl4j_w2vSentiment_test/");
 
     @Parameter(names = {"-b","--batch"}, description = "BatchSize")
-//    private int batchSize = 64;
-    private int batchSize = 512;
+    private int batchSize = 64;
+//    private int batchSize = 512;
 
     @Parameter(names = {"-l","--length"}, description = "Truncate max review length to")
     private int truncateReviewsToLength = 256;

@@ -5,6 +5,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.deeplearning4j.Utils.DL4J_Utils;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.embeddings.wordvectors.WordVectors;
@@ -20,6 +21,8 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.ExistingMiniBatchDataSetIterator;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -59,6 +62,9 @@ public class Word2VecSentimentRNN {
     public static final String WORD_VECTORS_PATH = "/PATH/TO/YOUR/VECTORS/GoogleNews-vectors-negative300.bin.gz";
 //    public static final String WORD_VECTORS_PATH = "/home/kepricon/Downloads/GoogleNews-vectors-negative300.bin.gz";
 
+    public static final String TRAIN_PATH = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "dl4j_w2vSentiment_train/");
+    public static final String TEST_PATH = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "dl4j_w2vSentiment_test/");
+
 
     public static void main(String[] args) throws Exception {
         if(WORD_VECTORS_PATH.startsWith("/PATH/TO/YOUR/VECTORS/")){
@@ -93,12 +99,19 @@ public class Word2VecSentimentRNN {
 
         //DataSetIterators for training and testing respectively
         WordVectors wordVectors = WordVectorSerializer.loadStaticModel(new File(WORD_VECTORS_PATH));
-        SentimentExampleIterator train = new SentimentExampleIterator(DATA_PATH, wordVectors, batchSize, truncateReviewsToLength, true);
-        SentimentExampleIterator test = new SentimentExampleIterator(DATA_PATH, wordVectors, batchSize, truncateReviewsToLength, false);
+//        SentimentExampleIterator train = new SentimentExampleIterator(DATA_PATH, wordVectors, batchSize, truncateReviewsToLength, true);
+//        SentimentExampleIterator test = new SentimentExampleIterator(DATA_PATH, wordVectors, batchSize, truncateReviewsToLength, false);
+
+        DataSetIterator train = new ExistingMiniBatchDataSetIterator(new File(TRAIN_PATH));
+        DataSetIterator test = new ExistingMiniBatchDataSetIterator(new File(TEST_PATH));
+
 
         System.out.println("Starting training");
+        long accumulatedTrainTime = 0;
         for (int i = 0; i < nEpochs; i++) {
+            long trainTime = System.currentTimeMillis();
             net.fit(train);
+            accumulatedTrainTime += System.currentTimeMillis() - trainTime;
             train.reset();
             System.out.println("Epoch " + i + " complete. Starting evaluation:");
 
@@ -120,21 +133,22 @@ public class Word2VecSentimentRNN {
         }
 
         //After training: load a single example and generate predictions
-        File firstPositiveReviewFile = new File(FilenameUtils.concat(DATA_PATH, "aclImdb/test/pos/0_10.txt"));
-        String firstPositiveReview = FileUtils.readFileToString(firstPositiveReviewFile);
-
-        INDArray features = test.loadFeaturesFromString(firstPositiveReview, truncateReviewsToLength);
-        INDArray networkOutput = net.output(features);
-        int timeSeriesLength = networkOutput.size(2);
-        INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
-
-        System.out.println("\n\n-------------------------------");
-        System.out.println("First positive review: \n" + firstPositiveReview);
-        System.out.println("\n\nProbabilities at last time step:");
-        System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
-        System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
-
-        System.out.println("----- Example complete -----");
+//        File firstPositiveReviewFile = new File(FilenameUtils.concat(DATA_PATH, "aclImdb/test/pos/0_10.txt"));
+//        String firstPositiveReview = FileUtils.readFileToString(firstPositiveReviewFile);
+//
+//        INDArray features = test.loadFeaturesFromString(firstPositiveReview, truncateReviewsToLength);
+//        INDArray networkOutput = net.output(features);
+//        int timeSeriesLength = networkOutput.size(2);
+//        INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
+//
+//        System.out.println("\n\n-------------------------------");
+//        System.out.println("First positive review: \n" + firstPositiveReview);
+//        System.out.println("\n\nProbabilities at last time step:");
+//        System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
+//        System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
+//
+//        System.out.println("----- Example complete -----");
+        DL4J_Utils.printTime("Train", accumulatedTrainTime);
     }
 
     public static void downloadData() throws Exception {
