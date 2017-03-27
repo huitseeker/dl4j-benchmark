@@ -24,10 +24,10 @@ public class BenchmarkCifar extends BaseBenchmark {
     public static ModelType modelType = ModelType.ALEXNET;
     //    @Option(name="--numGPUs",usage="How many workers to use for multiple GPUs.",aliases = "-ng")
 //    public int numGPUs = 0;
-    @Option(name="--numTrainExamples",usage="Num train examples.",aliases = "-nTrain")
+    @Option(name="--numTrainExamples",usage="Num train examples.",aliases = "-ntrain")
     public static int numTrainExamples = CifarLoader.NUM_TRAIN_IMAGES; // you can also use
-    @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-nTrainB")
-    public static int trainBatchSize = 125;
+    @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-batch")
+    public static int trainBatchSize = 100;
     @Option(name="--preProcess",usage="Set preprocess.",aliases = "-pre")
     public static boolean preProcess = true;
     @Option(name="--deviceCache",usage="Set CUDA device cache.",aliases = "-dcache")

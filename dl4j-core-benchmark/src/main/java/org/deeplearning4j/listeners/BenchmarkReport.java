@@ -8,6 +8,8 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OperatingSystem;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -25,6 +27,8 @@ public class BenchmarkReport {
     private String cpuCores;
     private String blasVendor;
     private String modelSummary;
+    private String cudaVersion;
+    private String cudnnVersion;
     private int numParams;
     private int numLayers;
     private long iterations;
@@ -56,6 +60,24 @@ public class BenchmarkReport {
         } catch(Exception e) {
             SystemInfo sys = new SystemInfo();
             devices.add(sys.getHardware().getProcessor().getName());
+        }
+
+        // also get CUDA version
+        try {
+            Field f = Class.forName( "org.bytedeco.javacpp.cuda" ).getField("__CUDA_API_VERSION");
+            int version = f.getInt(null);
+            this.cudaVersion = Integer.toString(version);
+        } catch( Exception e ) {
+            this.cudaVersion = "n/a";
+        }
+
+        // if cuDNN is present, let's get that info
+        try {
+            Method m = Class.forName( "org.bytedeco.javacpp.cudnn" ).getDeclaredMethod("cudnnGetVersion");
+            long version = (long) m.invoke(null);
+            this.cudnnVersion = Long.toString(version);
+        } catch( Exception e ) {
+            this.cudnnVersion = "n/a";
         }
     }
 
@@ -107,7 +129,7 @@ public class BenchmarkReport {
         OperatingSystem os = sys.getOperatingSystem();
         HardwareAbstractionLayer hardware = sys.getHardware();
 
-        final Object[][] table = new String[14][];
+        final Object[][] table = new String[16][];
         table[0] = new String[] { "Name", name };
         table[1] = new String[] { "Description", description };
         table[2] = new String[] { "Operating System",
@@ -118,13 +140,15 @@ public class BenchmarkReport {
         table[4] = new String[] { "CPU Cores", cpuCores };
         table[5] = new String[] { "Backend", backend };
         table[6] = new String[] { "BLAS Vendor", blasVendor };
-        table[7] = new String[] { "Total Params", Integer.toString(numParams) };
-        table[8] = new String[] { "Total Layers", Integer.toString(numLayers) };
-        table[9] = new String[] { "Avg Feedforward (ms)", df.format(avgFeedForward) };
-        table[10] = new String[] { "Avg Backprop (ms)", df.format(avgBackprop) };
-        table[11] = new String[] { "Avg Iteration (ms)", df.format(avgIterationTime()) };
-        table[12] = new String[] { "Avg Samples/sec", df.format(avgSamplesSec()) };
-        table[13] = new String[] { "Avg Batches/sec", df.format(avgBatchesSec()) };
+        table[7] = new String[] { "CUDA Version", cudaVersion };
+        table[8] = new String[] { "CUDNN Version", cudnnVersion };
+        table[9] = new String[] { "Total Params", Integer.toString(numParams) };
+        table[10] = new String[] { "Total Layers", Integer.toString(numLayers) };
+        table[11] = new String[] { "Avg Feedforward (ms)", df.format(avgFeedForward) };
+        table[12] = new String[] { "Avg Backprop (ms)", df.format(avgBackprop) };
+        table[13] = new String[] { "Avg Iteration (ms)", df.format(avgIterationTime()) };
+        table[14] = new String[] { "Avg Samples/sec", df.format(avgSamplesSec()) };
+        table[15] = new String[] { "Avg Batches/sec", df.format(avgBatchesSec()) };
 
         StringBuilder sb = new StringBuilder();
 
