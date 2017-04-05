@@ -48,12 +48,16 @@ public class BenchmarkCustom extends BaseBenchmark {
     public static int gcThreads = 5;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
     public static int gcWindow = 110;
+    @Option(name="--inputDimension",usage="The height and width of the dataset",aliases = "-dim")
+    public static int inputDimension = 224;
+    @Option(name="--resizeDimension",usage="Set Garbage Collection window in milliseconds.",aliases = "-resize")
+    public static int resizeDimension = inputDimension;
 
-    protected int height = 224;
-    protected int width = 224;
-    protected int channels = 3;
-    protected String datasetName  = "CUSTOM";
-    protected int seed = 42;
+    private int height = 224;
+    private int width = 224;
+    private int channels = 3;
+    private String datasetName  = "CUSTOM";
+    private int seed = 42;
 
     public void run(String[] args) throws Exception {
         // Parse command line arguments if they exist
@@ -65,6 +69,9 @@ public class BenchmarkCustom extends BaseBenchmark {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
         }
+
+        this.height = resizeDimension;
+        this.width = resizeDimension;
 
         // memory management optimizations
         CudaEnvironment.getInstance().getConfiguration()
@@ -95,8 +102,8 @@ public class BenchmarkCustom extends BaseBenchmark {
             pathFilter = new RandomPathFilter(new Random(seed), NativeImageLoader.ALLOWED_FORMATS);
 
         InputSplit[] split = fileSplit.sample(pathFilter, 1.0);
-        ImageTransform resize = new ResizeImageTransform(224, 224);
-        RecordReader trainRR = new ImageRecordReader(height, width, channels, labelMaker, resize);
+        ImageTransform resize = new ResizeImageTransform(resizeDimension, resizeDimension);
+        RecordReader trainRR = new ImageRecordReader(inputDimension, inputDimension, channels, labelMaker, resize);
         trainRR.initialize(split[0]);
         RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(trainRR, trainBatchSize);
 

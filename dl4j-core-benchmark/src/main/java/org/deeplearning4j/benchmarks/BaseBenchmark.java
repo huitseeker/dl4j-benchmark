@@ -11,6 +11,7 @@ import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 import java.lang.reflect.Method;
@@ -90,11 +91,14 @@ public abstract class BaseBenchmark {
             }
             if(model instanceof ComputationGraph) {
                 while(iter.hasNext()) {
-                    INDArray input = iter.next().getFeatures();
+                    DataSet ds = iter.next();
+                    INDArray input = ds.getFeatures();
+                    INDArray labels = ds.getLabels();
 
                     // forward
                     long forwardTime = System.currentTimeMillis();
                     ((ComputationGraph) model).setInput(0, input);
+                    ((ComputationGraph) model).setLabels(labels);
                     ((ComputationGraph) model).feedForward();
                     forwardTime = System.currentTimeMillis() - forwardTime;
                     totalForward += forwardTime;
@@ -103,7 +107,7 @@ public abstract class BaseBenchmark {
                     long backwardTime = System.currentTimeMillis();
                     Method m = ComputationGraph.class.getDeclaredMethod("calcBackpropGradients", boolean.class, INDArray[].class);
                     m.setAccessible(true);
-                    m.invoke(model, false);
+                    m.invoke(model, false, null);
                     backwardTime = System.currentTimeMillis() - backwardTime;
                     totalBackward += backwardTime;
 
