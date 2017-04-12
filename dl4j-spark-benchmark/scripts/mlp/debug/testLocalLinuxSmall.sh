@@ -1,4 +1,4 @@
-JARARGS="-tempPath file:/C:/Temp/MLPSparkTestSmall/Temp/ -resultPath file:/C:/Temp/MLPSparkTestSmall/Results/ -useSparkLocal true"
+JARARGS="-tempPath /tmp/MLPSparkTestSmall/Temp/ -resultPath /tmp/MLPSparkTestSmall/Results/ -useSparkLocal true"
 JARARGS="$JARARGS -dataLoadingMethods SparkBinaryFiles Parallelize -numTestFiles 1920 -numParams 100000 -dataSize 128"
 JARARGS="$JARARGS -miniBatchSizePerWorker 32 -saveUpdater true -repartition Always -repartitionStrategy Balanced"
 JARARGS="$JARARGS -workerPrefetchNumBatches 0"
