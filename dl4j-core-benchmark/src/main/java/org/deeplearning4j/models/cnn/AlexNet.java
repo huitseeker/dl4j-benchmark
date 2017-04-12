@@ -52,6 +52,7 @@ public class AlexNet implements TestableModel {
         double dropOut = 0.5;
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .workspaceMode(WorkspaceMode.SINGLE)
                 .seed(seed)
                 .weightInit(WeightInit.DISTRIBUTION)
                 .dist(new NormalDistribution(0.0, 0.01))
@@ -79,10 +80,12 @@ public class AlexNet implements TestableModel {
                         .nIn(channels)
                         .nOut(64)
                         .build())
-                .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX, new int[]{3,3}, new int[]{2,2})
+                .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX, new int[]{3,3}, new int[]{2,2}, new int[]{1,1})
+                        .convolutionMode(ConvolutionMode.Truncate)
                         .name("maxpool1")
                         .build())
                 .layer(2, new ConvolutionLayer.Builder(new int[]{5,5}, new int[]{2,2}, new int[]{2,2}) // TODO: fix input and put stride back to 1,1
+                        .convolutionMode(ConvolutionMode.Truncate)
                         .name("cnn2")
                         .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
                         .nOut(192)

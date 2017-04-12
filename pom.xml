@@ -45,7 +45,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>
+                <nd4j.backend>nd4j-cuda-8.0</nd4j.backend>
             </properties>
         </profile>
         <profile>
@@ -54,7 +54,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>
+                <nd4j.backend>nd4j-cuda-8.0</nd4j.backend>
             </properties>
             <dependencies>
                 <dependency>
@@ -123,6 +123,12 @@
             <groupId>org.nd4j</groupId>
             <artifactId>${nd4j.backend}</artifactId>
             <version>${nd4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>${nd4j.backend}</artifactId>
+            <version>${nd4j.version}</version>
+            <classifier>linux-x86_64</classifier>
         </dependency>
         <dependency>
             <groupId>com.github.oshi</groupId>

@@ -47,7 +47,7 @@ public class BenchmarkCustom extends BaseBenchmark {
     @Option(name="--gcThreads",usage="Set Garbage Collection threads.",aliases = "-gcthreads")
     public static int gcThreads = 5;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
-    public static int gcWindow = 110;
+    public static int gcWindow = 5000;
     @Option(name="--inputDimension",usage="The height and width of the dataset",aliases = "-dim")
     public static int inputDimension = 224;
     @Option(name="--resizeDimension",usage="Set Garbage Collection window in milliseconds.",aliases = "-resize")
@@ -74,11 +74,6 @@ public class BenchmarkCustom extends BaseBenchmark {
         this.width = resizeDimension;
 
         // memory management optimizations
-        CudaEnvironment.getInstance().getConfiguration()
-                .allowMultiGPU(false)
-                .setMaximumDeviceCache(deviceCache * 1024L * 1024L * 1024L)
-                .setMaximumHostCache(hostCache * 1024L * 1024L * 1024L)
-                .setNumberOfGcThreads(gcThreads);
         Nd4j.create(1);
         Nd4j.getMemoryManager().togglePeriodicGc(true);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);

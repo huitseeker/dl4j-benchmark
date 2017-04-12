@@ -31,13 +31,13 @@ public class BenchmarkCifar extends BaseBenchmark {
     @Option(name="--preProcess",usage="Set preprocess.",aliases = "-pre")
     public static boolean preProcess = true;
     @Option(name="--deviceCache",usage="Set CUDA device cache.",aliases = "-dcache")
-    public static long deviceCache = 6L;
+    public static long deviceCache = 3L;
     @Option(name="--hostCache",usage="Set CUDA host cache.",aliases = "-hcache")
-    public static long hostCache = 12L;
+    public static long hostCache = 6L;
     @Option(name="--gcThreads",usage="Set Garbage Collection threads.",aliases = "-gcthreads")
     public static int gcThreads = 4;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
-    public static int gcWindow = 300;
+    public static int gcWindow = 5000;
 
     protected int height = 224;
     protected int width = 224;
@@ -58,13 +58,8 @@ public class BenchmarkCifar extends BaseBenchmark {
         }
 
         // memory management optimizations
-        CudaEnvironment.getInstance().getConfiguration()
-                .allowMultiGPU(false)
-                .setMaximumDeviceCache(deviceCache * 1024L * 1024L * 1024L)
-                .setMaximumHostCache(hostCache * 1024L * 1024L * 1024L)
-                .setNumberOfGcThreads(gcThreads);
         Nd4j.create(1);
-        Nd4j.getMemoryManager().togglePeriodicGc(true);
+        Nd4j.getMemoryManager().togglePeriodicGc(false);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);
         Nd4j.getMemoryManager().setOccasionalGcFrequency(0);
 
@@ -72,8 +67,7 @@ public class BenchmarkCifar extends BaseBenchmark {
             throw new UnsupportedOperationException("CIFAR-10 benchmarks are applicable to CNN models only.");
 
         log.info("Loading data...");
-        ImageTransform flip = new FlipImageTransform(seed); // Should random flip some images but not all
-        DataSetIterator cifar = new CifarDataSetIterator(trainBatchSize, numTrainExamples, new int[]{height, width, channels}, numLabels, flip, preProcess, train);
+        DataSetIterator cifar = new CifarDataSetIterator(trainBatchSize, numTrainExamples, new int[]{height, width, channels}, numLabels, null, preProcess, train);
 
         benchmark(height, width, channels, numLabels, trainBatchSize, seed, datasetName, cifar, modelType);
     }
