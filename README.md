@@ -26,7 +26,7 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.58 | 2.42  | 2.93  | 34.93  |
+|  0.58 | 2.42  | 2.93  | 27.9  |
 
 Full versioning and statistics:
 
