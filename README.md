@@ -18,7 +18,9 @@ training iteration timings, the number of labels and batch size impacts updater 
 
 ### AlexNet 16x3x224x224
 
-The AlexNet batch 16 benchmark below was developed as a comparison to: https://github.com/jcjohnson/cnn-benchmarks.
+The AlexNet batch 16 benchmark below was developed as a comparison 
+to: https://github.com/jcjohnson/cnn-benchmarks. Note that the linked benchmarks do not provide 
+values for training iterations.
 
 DL4J summary (milliseconds):
 
