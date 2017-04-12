@@ -15,7 +15,9 @@ The following benchmarks have been run using the SNAPSHOT version of DL4J 0.8.1.
 
 ### AlexNet 16x3x224x224
 
-Matches benchmarks designed for Torch NN: https://github.com/jcjohnson/cnn-benchmarks.
+The AlexNet batch 16 benchmark below was developed as a comparison to: https://github.com/jcjohnson/cnn-benchmarks.
+
+DL4J summary:
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
@@ -44,7 +46,9 @@ Full versioning and statistics:
 
 ### AlexNet 128x3x224x224
 
-This benchmark was run as a comparison to the benchmarks available here: https://github.com/soumith/convnet-benchmarks.
+The AlexNet batch 128 benchmark is a comparison to benchmarks on popular CNNs: https://github.com/soumith/convnet-benchmarks.
+
+DL4J summary:
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
