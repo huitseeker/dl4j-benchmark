@@ -69,11 +69,14 @@ public abstract class BaseBenchmark {
             long nIterations = 0;
             if(model instanceof MultiLayerNetwork) {
                 while(iter.hasNext()) {
-                    INDArray input = iter.next().getFeatures();
+                    DataSet ds = iter.next();
+                    INDArray input = ds.getFeatures();
+                    INDArray labels = ds.getLabels();
 
                     // forward
                     long forwardTime = System.currentTimeMillis();
                     ((MultiLayerNetwork) model).setInput(input);
+                    ((MultiLayerNetwork) model).setLabels(labels);
                     ((MultiLayerNetwork) model).feedForward();
                     forwardTime = System.currentTimeMillis() - forwardTime;
                     totalForward += forwardTime;

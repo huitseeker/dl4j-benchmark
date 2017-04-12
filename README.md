@@ -11,23 +11,26 @@ Benchmarks popular models and configurations on Deeplearning4j, and output perfo
 
 ## Top Benchmarks
 
-The following benchmarks have been run using the SNAPSHOT version of DL4J 0.8.1. This version utilizes workspace concepts and is significantly faster than 0.8.0.
+The following benchmarks have been run using the SNAPSHOT version of DL4J 0.8.1.
+This version utilizes workspace concepts and is significantly faster for inference
+than 0.8.0. The number of labels used for benchmarks was 1000. Note that for full
+training iteration timings, the number of labels and batch size impacts updater timing.
 
 ### AlexNet 16x3x224x224
 
 The AlexNet batch 16 benchmark below was developed as a comparison to: https://github.com/jcjohnson/cnn-benchmarks.
 
-DL4J summary:
+DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.44 | 2.1  | 2.54  | 54.01  |
+|  0.58 | 2.42  | 2.93  | 34.93  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                         CIFAR-10 16x3x224x224
+                 Description                           CUSTOM 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
@@ -35,30 +38,32 @@ Full versioning and statistics:
                  BLAS Vendor                                        CUBLAS
                 CUDA Version                                          8000
                CUDNN Version                                          6020
-                Total Params                                      20344650
+                Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.44
-           Avg Backprop (ms)                                           2.1
-          Avg Iteration (ms)                                         54.01
-             Avg Samples/sec                                        290.71
-             Avg Batches/sec                                         18.17
+        Avg Feedforward (ms)                                          0.58
+           Avg Backprop (ms)                                          2.42
+          Avg Iteration (ms)                                          27.9
+             Avg Samples/sec                                        566.75
+             Avg Batches/sec                                         35.48
 ```
 
 ### AlexNet 128x3x224x224
 
-The AlexNet batch 128 benchmark is a comparison to benchmarks on popular CNNs: https://github.com/soumith/convnet-benchmarks.
+The AlexNet batch 128 benchmark is a comparison to benchmarks on popular
+CNNs: https://github.com/soumith/convnet-benchmarks. Note that the linked benchmarks do
+not provide values for training iterations.
 
-DL4J summary:
+DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.54 | 6.78  | 7.32  | 69.08  |
+|  0.75 | 8.1  | 8.85  | 111.5  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                        CIFAR-10 128x3x224x224
+                 Description                          CUSTOM 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
@@ -66,13 +71,13 @@ Full versioning and statistics:
                  BLAS Vendor                                        CUBLAS
                 CUDA Version                                          8000
                CUDNN Version                                          6020
-                Total Params                                      20344650
+                Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.54
-           Avg Backprop (ms)                                          6.78
-          Avg Iteration (ms)                                         69.08
-             Avg Samples/sec                                       1572.51
-             Avg Batches/sec                                         12.29
+        Avg Feedforward (ms)                                          0.75
+           Avg Backprop (ms)                                           8.1
+          Avg Iteration (ms)                                         111.5
+             Avg Samples/sec                                        907.66
+             Avg Batches/sec                                          7.93
 ```
 
 ## Running Benchmarks
