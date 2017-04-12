@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Dl4j-Benchmarks</artifactId>
+        <artifactId>dl4j-benchmarks</artifactId>
         <groupId>org.dl4j.benchmarks</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <!--<scala.version>2.10.6</scala.version>-->
         <!--<scala.binary.version>2.10</scala.binary.version>-->
-        <spark.version>1.5.0</spark.version>
+        <spark.version>2.1.0</spark.version>
         <jcommander.version>1.27</jcommander.version>
     </properties>
 
@@ -47,6 +47,12 @@
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>dl4j-spark_${scala.binary.version}</artifactId>
+            <version>${dl4j.spark.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui_${scala.binary.version}</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
 
