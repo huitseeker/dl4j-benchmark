@@ -17,7 +17,6 @@ import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.File;
@@ -52,6 +51,8 @@ public class BenchmarkCustom extends BaseBenchmark {
     public static int inputDimension = 224;
     @Option(name="--resizeDimension",usage="Set Garbage Collection window in milliseconds.",aliases = "-resize")
     public static int resizeDimension = inputDimension;
+    @Option(name="--profile",usage="Run profiler and print results",aliases = "-profile")
+    public static boolean profile = false;
 
     private int height = 224;
     private int width = 224;
@@ -104,7 +105,7 @@ public class BenchmarkCustom extends BaseBenchmark {
 
         log.info("Preparing benchmarks for "+split[0].locations().length+" images, "+iter.getLabels().size()+" labels");
 
-        benchmark(height, width, channels, trainRR.getLabels().size(), trainBatchSize, seed, datasetName, iter, modelType);
+        benchmark(height, width, channels, trainRR.getLabels().size(), trainBatchSize, seed, datasetName, iter, modelType, profile);
     }
 
     public static void main(String[] args) throws Exception {

@@ -38,6 +38,8 @@ public class BenchmarkCifar extends BaseBenchmark {
     public static int gcThreads = 4;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
     public static int gcWindow = 5000;
+    @Option(name="--profile",usage="Run profiler and print results",aliases = "-profile")
+    public static boolean profile = false;
 
     protected int height = 224;
     protected int width = 224;
@@ -69,7 +71,7 @@ public class BenchmarkCifar extends BaseBenchmark {
         log.info("Loading data...");
         DataSetIterator cifar = new CifarDataSetIterator(trainBatchSize, numTrainExamples, new int[]{height, width, channels}, numLabels, null, preProcess, train);
 
-        benchmark(height, width, channels, numLabels, trainBatchSize, seed, datasetName, cifar, modelType);
+        benchmark(height, width, channels, numLabels, trainBatchSize, seed, datasetName, cifar, modelType, profile);
     }
 
     public static void main(String[] args) throws Exception {

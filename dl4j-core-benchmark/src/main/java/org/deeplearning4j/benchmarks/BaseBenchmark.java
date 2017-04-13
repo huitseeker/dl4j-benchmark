@@ -12,8 +12,11 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.parallelism.ParallelWrapper;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.executioner.OpExecutioner;
 import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.profiler.OpProfiler;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -29,7 +32,8 @@ public abstract class BaseBenchmark {
     protected static Map<ModelType,TestableModel> networks;
     protected boolean train = true;
 
-    public void benchmark(int height, int width, int channels, int numLabels, int batchSize, int seed, String datasetName, DataSetIterator iter, ModelType modelType) throws Exception {
+    public void benchmark(int height, int width, int channels, int numLabels, int batchSize, int seed, String datasetName,
+                          DataSetIterator iter, ModelType modelType, boolean profile) throws Exception {
         long totalTime = System.currentTimeMillis();
 
         log.info("Building models for "+modelType+"....");
@@ -51,10 +55,12 @@ public abstract class BaseBenchmark {
 
 
             log.info("===== Benchmarking training iteration =====");
+            profileStart(profile);
             if(model instanceof MultiLayerNetwork)
                 ((MultiLayerNetwork) model).fit(iter);
             if(model instanceof ComputationGraph)
                 ((ComputationGraph) model).fit(iter);
+            profileEnd("Fit", profile);
 
 
             log.info("===== Benchmarking forward/backward pass =====");
@@ -68,6 +74,7 @@ public abstract class BaseBenchmark {
             long totalBackward = 0;
             long nIterations = 0;
             if(model instanceof MultiLayerNetwork) {
+                profileStart(profile);
                 while(iter.hasNext()) {
                     DataSet ds = iter.next();
                     INDArray input = ds.getFeatures();
@@ -92,8 +99,10 @@ public abstract class BaseBenchmark {
                     nIterations += 1;
                     if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");
                 }
+                profileEnd("Forward", profile);
             }
             if(model instanceof ComputationGraph) {
+                profileStart(profile);
                 while(iter.hasNext()) {
                     DataSet ds = iter.next();
                     INDArray input = ds.getFeatures();
@@ -118,6 +127,7 @@ public abstract class BaseBenchmark {
                     nIterations += 1;
                     if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");
                 }
+                profileEnd("Backward", profile);
             }
             report.setAvgFeedForward((double) totalForward / (double) nIterations);
             report.setAvgBackprop((double) totalBackward / (double) nIterations);
@@ -129,6 +139,20 @@ public abstract class BaseBenchmark {
 
             System.out.println(report.getModelSummary());
             System.out.println(report.toString());
+        }
+    }
+
+    private static void profileStart(boolean enabled){
+        if(enabled){
+            Nd4j.getExecutioner().setProfilingMode(OpExecutioner.ProfilingMode.ALL);
+            OpProfiler.getInstance().reset();
+        }
+    }
+
+    private static void profileEnd(String label, boolean enabled){
+        if(enabled){
+            log.info("==== " + label + " - OpProfiler Results ====");
+            OpProfiler.getInstance().printOutDashboard();
         }
     }
 }
