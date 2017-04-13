@@ -3,6 +3,9 @@ package org.deeplearning4j.models;
 import com.beust.jcommander.ParameterException;
 import org.deeplearning4j.models.cnn.*;
 import org.deeplearning4j.models.cnn.VGG16;
+import org.deeplearning4j.models.mlp.MLP;
+import org.deeplearning4j.models.rnn.RNN;
+import org.deeplearning4j.nn.conf.Updater;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +46,15 @@ public class ModelSelector {
             case VGG16:
                 netmap.put(ModelType.VGG16, new VGG16(height, width, channels, numLabels, seed, iterations));
                 break;
+            case MLP_SMALL:
+                netmap.put(ModelType.MLP_SMALL, new MLP(height, new int[]{512,512,512},numLabels, seed, Updater.ADAM ));
+                break;
+
             // RNN models
             case RNN:
-//                // not yet
+            case RNN_SMALL:
+                netmap.put(ModelType.RNN_SMALL, new RNN(height, new int[]{256,256},numLabels, seed, Updater.RMSPROP ));
+                break;
             default:
 //                // do nothing
         }
