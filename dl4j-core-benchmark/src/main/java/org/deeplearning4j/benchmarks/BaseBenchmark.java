@@ -37,7 +37,7 @@ public abstract class BaseBenchmark {
         long totalTime = System.currentTimeMillis();
 
         log.info("Building models for "+modelType+"....");
-        networks = ModelSelector.select(modelType,height, width, channels, numLabels, seed, iterations);
+        networks = ModelSelector.select(modelType, height, width, channels, numLabels, seed, iterations);
 
         log.info("========================================");
         log.info("===== Benchmarking selected models =====");
