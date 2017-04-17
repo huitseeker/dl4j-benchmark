@@ -26,7 +26,7 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.58 | 2.42  | 2.93  | 27.9  |
+|  0.66 | 2.99  | 3.65  | 27.14  |
 
 Full versioning and statistics:
 
@@ -42,11 +42,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.58
-           Avg Backprop (ms)                                          2.42
-          Avg Iteration (ms)                                          27.9
-             Avg Samples/sec                                        566.75
-             Avg Batches/sec                                         35.48
+        Avg Feedforward (ms)                                          0.66
+           Avg Backprop (ms)                                          2.99
+          Avg Iteration (ms)                                         27.14
+             Avg Samples/sec                                        578.31
+             Avg Batches/sec                                         36.25
 ```
 
 ### AlexNet 128x3x224x224
@@ -59,7 +59,7 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.75 | 8.1  | 8.85  | 111.5  |
+|  0.82 | 10.6  | 11.42 | 53.38  |
 
 Full versioning and statistics:
 
@@ -75,11 +75,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.75
-           Avg Backprop (ms)                                           8.1
-          Avg Iteration (ms)                                         111.5
-             Avg Samples/sec                                        907.66
-             Avg Batches/sec                                          7.93
+        Avg Feedforward (ms)                                          0.82
+           Avg Backprop (ms)                                          10.6
+          Avg Iteration (ms)                                         53.38
+             Avg Samples/sec                                       1904.22
+             Avg Batches/sec                                         15.45
 ```
 
 ## Running Benchmarks

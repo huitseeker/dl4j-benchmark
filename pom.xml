@@ -116,11 +116,6 @@
         </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-nn</artifactId>
-            <version>${dl4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-ui_${scala.binary.version}</artifactId>
             <version>${dl4j.version}</version>
         </dependency>

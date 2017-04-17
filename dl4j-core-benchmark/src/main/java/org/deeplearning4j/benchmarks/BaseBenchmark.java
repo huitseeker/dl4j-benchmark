@@ -109,20 +109,20 @@ public abstract class BaseBenchmark {
                     INDArray labels = ds.getLabels();
 
                     // forward
-                    long forwardTime = System.currentTimeMillis();
+                    long forwardTime = System.nanoTime();
                     ((ComputationGraph) model).setInput(0, input);
                     ((ComputationGraph) model).setLabels(labels);
                     ((ComputationGraph) model).feedForward();
-                    forwardTime = System.currentTimeMillis() - forwardTime;
-                    totalForward += forwardTime;
+                    forwardTime = System.nanoTime() - forwardTime;
+                    totalForward += (forwardTime / 1e6);
 
                     // backward
-                    long backwardTime = System.currentTimeMillis();
+                    long backwardTime = System.nanoTime();
                     Method m = ComputationGraph.class.getDeclaredMethod("calcBackpropGradients", boolean.class, INDArray[].class);
                     m.setAccessible(true);
                     m.invoke(model, false, null);
-                    backwardTime = System.currentTimeMillis() - backwardTime;
-                    totalBackward += backwardTime;
+                    backwardTime = System.nanoTime() - backwardTime;
+                    totalBackward += (backwardTime / 1e6);
 
                     nIterations += 1;
                     if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");
