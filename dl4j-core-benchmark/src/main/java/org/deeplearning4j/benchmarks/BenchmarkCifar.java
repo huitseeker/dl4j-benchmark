@@ -9,7 +9,6 @@ import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -72,6 +71,8 @@ public class BenchmarkCifar extends BaseBenchmark {
         DataSetIterator cifar = new CifarDataSetIterator(trainBatchSize, numTrainExamples, new int[]{height, width, channels}, numLabels, null, preProcess, train);
 
         benchmark(height, width, channels, numLabels, trainBatchSize, seed, datasetName, cifar, modelType, profile);
+
+        System.exit(0);
     }
 
     public static void main(String[] args) throws Exception {

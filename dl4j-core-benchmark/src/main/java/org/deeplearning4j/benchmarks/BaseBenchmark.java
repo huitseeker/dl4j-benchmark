@@ -1,6 +1,7 @@
 package org.deeplearning4j.benchmarks;
 
 import lombok.extern.slf4j.Slf4j;
+import org.datavec.image.recordreader.ImageRecordReader;
 import org.deeplearning4j.listeners.BenchmarkListener;
 import org.deeplearning4j.listeners.BenchmarkReport;
 import org.deeplearning4j.models.ModelSelector;
@@ -9,6 +10,7 @@ import org.deeplearning4j.models.TestableModel;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.listeners.PerformanceListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.parallelism.ParallelWrapper;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -52,6 +54,7 @@ public abstract class BaseBenchmark {
             report.setModel(model);
 
             model.setListeners(new ScoreIterationListener(listenerFreq), new BenchmarkListener(report));
+//            model.setListeners(new PerformanceListener(1, true));
 
 
             log.info("===== Benchmarking training iteration =====");
@@ -81,20 +84,20 @@ public abstract class BaseBenchmark {
                     INDArray labels = ds.getLabels();
 
                     // forward
-                    long forwardTime = System.currentTimeMillis();
+                    long forwardTime = System.nanoTime();
                     ((MultiLayerNetwork) model).setInput(input);
                     ((MultiLayerNetwork) model).setLabels(labels);
                     ((MultiLayerNetwork) model).feedForward();
-                    forwardTime = System.currentTimeMillis() - forwardTime;
-                    totalForward += forwardTime;
+                    forwardTime = System.nanoTime() - forwardTime;
+                    totalForward += (forwardTime / 1e6);
 
                     // backward
-                    long backwardTime = System.currentTimeMillis();
+                    long backwardTime = System.nanoTime();
                     Method m = MultiLayerNetwork.class.getDeclaredMethod("backprop"); // requires reflection
                     m.setAccessible(true);
                     m.invoke(model);
-                    backwardTime = System.currentTimeMillis() - backwardTime;
-                    totalBackward += backwardTime;
+                    backwardTime = System.nanoTime() - backwardTime;
+                    totalBackward += (backwardTime / 1e6);
 
                     nIterations += 1;
                     if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");

@@ -17,6 +17,7 @@ import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.File;
@@ -75,8 +76,17 @@ public class BenchmarkCustom extends BaseBenchmark {
         this.width = resizeDimension;
 
         // memory management optimizations
+        CudaEnvironment.getInstance().getConfiguration()
+                // key option enabled
+                .allowMultiGPU(true)
+                .allowCrossDeviceAccess(true)
+                // we're allowing larger memory caches
+                .setMaximumDeviceCache(0L * 1024L * 1024L * 1024L)
+                .setMaximumHostCache(0L * 1024L * 1024L * 1024L)
+                .setNumberOfGcThreads(5)
+                .setNoGcWindowMs(gcWindow);
         Nd4j.create(1);
-        Nd4j.getMemoryManager().togglePeriodicGc(true);
+        Nd4j.getMemoryManager().togglePeriodicGc(false);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);
         Nd4j.getMemoryManager().setOccasionalGcFrequency(0);
 
@@ -106,6 +116,8 @@ public class BenchmarkCustom extends BaseBenchmark {
         log.info("Preparing benchmarks for "+split[0].locations().length+" images, "+iter.getLabels().size()+" labels");
 
         benchmark(height, width, channels, trainRR.getLabels().size(), trainBatchSize, seed, datasetName, iter, modelType, profile);
+
+        System.exit(0);
     }
 
     public static void main(String[] args) throws Exception {
