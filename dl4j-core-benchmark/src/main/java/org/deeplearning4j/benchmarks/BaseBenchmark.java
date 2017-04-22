@@ -2,6 +2,7 @@ package org.deeplearning4j.benchmarks;
 
 import lombok.extern.slf4j.Slf4j;
 import org.datavec.image.recordreader.ImageRecordReader;
+import org.deeplearning4j.datasets.iterator.AsyncDataSetIterator;
 import org.deeplearning4j.listeners.BenchmarkListener;
 import org.deeplearning4j.listeners.BenchmarkReport;
 import org.deeplearning4j.models.ModelSelector;
@@ -13,6 +14,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.PerformanceListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.parallelism.ParallelWrapper;
+import org.nd4j.linalg.api.memory.MemoryWorkspace;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.executioner.OpExecutioner;
 import org.nd4j.linalg.dataset.api.DataSet;
@@ -53,7 +55,7 @@ public abstract class BaseBenchmark {
             BenchmarkReport report = new BenchmarkReport(net.getKey().toString(), dimensions);
             report.setModel(model);
 
-            model.setListeners(new ScoreIterationListener(listenerFreq), new BenchmarkListener(report));
+            model.setListeners(new PerformanceListener(listenerFreq), new BenchmarkListener(report));
 //            model.setListeners(new PerformanceListener(1, true));
 
 
@@ -73,62 +75,72 @@ public abstract class BaseBenchmark {
                 https://github.com/jcjohnson/cnn-benchmarks/blob/master/cnn_benchmark.lua
              */
             iter.reset(); // prevents NPE
+            AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
+
             long totalForward = 0;
             long totalBackward = 0;
             long nIterations = 0;
             if(model instanceof MultiLayerNetwork) {
                 profileStart(profile);
-                while(iter.hasNext()) {
-                    DataSet ds = iter.next();
+                while(adsi.hasNext()) {
+                    DataSet ds = adsi.next();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
 
-                    // forward
-                    long forwardTime = System.nanoTime();
-                    ((MultiLayerNetwork) model).setInput(input);
-                    ((MultiLayerNetwork) model).setLabels(labels);
-                    ((MultiLayerNetwork) model).feedForward();
-                    forwardTime = System.nanoTime() - forwardTime;
-                    totalForward += (forwardTime / 1e6);
+                    try (MemoryWorkspace workspace = Nd4j.getWorkspaceManager().getAndActivateWorkspace(ComputationGraph.workspaceExternal)) {
 
-                    // backward
-                    long backwardTime = System.nanoTime();
-                    Method m = MultiLayerNetwork.class.getDeclaredMethod("backprop"); // requires reflection
-                    m.setAccessible(true);
-                    m.invoke(model);
-                    backwardTime = System.nanoTime() - backwardTime;
-                    totalBackward += (backwardTime / 1e6);
 
-                    nIterations += 1;
-                    if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");
+                        // forward
+                        long forwardTime = System.nanoTime();
+                        ((MultiLayerNetwork) model).setInput(input);
+                        ((MultiLayerNetwork) model).setLabels(labels);
+                        ((MultiLayerNetwork) model).feedForward();
+                        forwardTime = System.nanoTime() - forwardTime;
+                        totalForward += (forwardTime / 1e6);
+
+                        // backward
+                        long backwardTime = 0;
+                        Method m = MultiLayerNetwork.class.getDeclaredMethod("backprop"); // requires reflection
+                        m.setAccessible(true);
+
+                        backwardTime = System.nanoTime();
+                        m.invoke(model);
+                        backwardTime = System.nanoTime() - backwardTime;
+                        totalBackward += (backwardTime / 1e6);
+
+                        nIterations += 1;
+                        if (nIterations % 100 == 0) log.info("Completed " + nIterations + " iterations");
+                    }
                 }
                 profileEnd("Forward", profile);
-            }
-            if(model instanceof ComputationGraph) {
+            } else if(model instanceof ComputationGraph) {
                 profileStart(profile);
-                while(iter.hasNext()) {
-                    DataSet ds = iter.next();
+                while(adsi.hasNext()) {
+                    DataSet ds = adsi.next();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
 
-                    // forward
-                    long forwardTime = System.nanoTime();
-                    ((ComputationGraph) model).setInput(0, input);
-                    ((ComputationGraph) model).setLabels(labels);
-                    ((ComputationGraph) model).feedForward();
-                    forwardTime = System.nanoTime() - forwardTime;
-                    totalForward += (forwardTime / 1e6);
+                    try (MemoryWorkspace workspace = Nd4j.getWorkspaceManager().getAndActivateWorkspace(ComputationGraph.workspaceExternal)) {
 
-                    // backward
-                    long backwardTime = System.nanoTime();
-                    Method m = ComputationGraph.class.getDeclaredMethod("calcBackpropGradients", boolean.class, INDArray[].class);
-                    m.setAccessible(true);
-                    m.invoke(model, false, null);
-                    backwardTime = System.nanoTime() - backwardTime;
-                    totalBackward += (backwardTime / 1e6);
+                        // forward
+                        long forwardTime = System.nanoTime();
+                        ((ComputationGraph) model).setInput(0, input);
+                        ((ComputationGraph) model).setLabels(labels);
+                        ((ComputationGraph) model).feedForward();
+                        forwardTime = System.nanoTime() - forwardTime;
+                        totalForward += (forwardTime / 1e6);
 
-                    nIterations += 1;
-                    if(nIterations % 100 == 0) log.info("Completed "+nIterations+" iterations");
+                        // backward
+                        long backwardTime = System.nanoTime();
+                        Method m = ComputationGraph.class.getDeclaredMethod("calcBackpropGradients", boolean.class, INDArray[].class);
+                        m.setAccessible(true);
+                        m.invoke(model, false, null);
+                        backwardTime = System.nanoTime() - backwardTime;
+                        totalBackward += (backwardTime / 1e6);
+
+                        nIterations += 1;
+                        if (nIterations % 100 == 0) log.info("Completed " + nIterations + " iterations");
+                    }
                 }
                 profileEnd("Backward", profile);
             }

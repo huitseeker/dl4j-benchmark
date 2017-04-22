@@ -13,11 +13,13 @@ import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.ResizeImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.deeplearning4j.datasets.iterator.ParallelExistingMiniBatchDataSetIterator;
 import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.nd4j.jita.conf.CudaEnvironment;
+import org.nd4j.linalg.dataset.ExistingMiniBatchDataSetIterator;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.File;
@@ -39,7 +41,7 @@ public class BenchmarkCustom extends BaseBenchmark {
     @Option(name="--numLabels",usage="Train batch size.",aliases = "-labels")
     public static int numLabels = -1;
     @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-batch")
-    public static int trainBatchSize = 16;
+    public static int trainBatchSize = 128;
     @Option(name="--deviceCache",usage="Set CUDA device cache.",aliases = "-dcache")
     public static long deviceCache = 6L;
     @Option(name="--hostCache",usage="Set CUDA host cache.",aliases = "-hcache")
@@ -76,7 +78,7 @@ public class BenchmarkCustom extends BaseBenchmark {
         this.width = resizeDimension;
 
         // memory management optimizations
-        CudaEnvironment.getInstance().getConfiguration()
+        /*CudaEnvironment.getInstance().getConfiguration()
                 // key option enabled
                 .allowMultiGPU(true)
                 .allowCrossDeviceAccess(true)
@@ -85,6 +87,8 @@ public class BenchmarkCustom extends BaseBenchmark {
                 .setMaximumHostCache(0L * 1024L * 1024L * 1024L)
                 .setNumberOfGcThreads(5)
                 .setNoGcWindowMs(gcWindow);
+        */
+
         Nd4j.create(1);
         Nd4j.getMemoryManager().togglePeriodicGc(false);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);
@@ -97,6 +101,7 @@ public class BenchmarkCustom extends BaseBenchmark {
             throw new IllegalArgumentException("You must specify a valid path to a labelled dataset of images.");
 
         log.info("Loading data...");
+
         ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
         File mainPath = new File(datasetPath);
         FileSplit fileSplit = new FileSplit(mainPath, NativeImageLoader.ALLOWED_FORMATS, new Random(seed));
@@ -116,6 +121,11 @@ public class BenchmarkCustom extends BaseBenchmark {
         log.info("Preparing benchmarks for "+split[0].locations().length+" images, "+iter.getLabels().size()+" labels");
 
         benchmark(height, width, channels, trainRR.getLabels().size(), trainBatchSize, seed, datasetName, iter, modelType, profile);
+
+        //DataSetIterator iter = new ParallelExistingMiniBatchDataSetIterator(new File("/tmp/bmd/"),"bm-train-%d.bin", 2, 8, true);
+       // benchmark(height, width, channels, 8644, trainBatchSize, seed, datasetName, iter, modelType, profile);
+
+
 
         System.exit(0);
     }
