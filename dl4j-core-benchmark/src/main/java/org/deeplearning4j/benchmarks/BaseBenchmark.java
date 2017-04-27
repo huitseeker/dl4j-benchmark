@@ -74,16 +74,17 @@ public abstract class BaseBenchmark {
                 and backward. This is consistent with benchmarks seen in the wild like this code:
                 https://github.com/jcjohnson/cnn-benchmarks/blob/master/cnn_benchmark.lua
              */
-            AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
-            Thread.sleep(10000);
+            //AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
+            //Thread.sleep(10000);
+            iter.reset();
 
             long totalForward = 0;
             long totalBackward = 0;
             long nIterations = 0;
             if(model instanceof MultiLayerNetwork) {
                 profileStart(profile);
-                while(adsi.hasNext()) {
-                    DataSet ds = adsi.next();
+                while(iter.hasNext()) {
+                    DataSet ds = iter.next();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
 
@@ -115,8 +116,8 @@ public abstract class BaseBenchmark {
                 profileEnd("Forward", profile);
             } else if(model instanceof ComputationGraph) {
                 profileStart(profile);
-                while(adsi.hasNext()) {
-                    DataSet ds = adsi.next();
+                while(iter.hasNext()) {
+                    DataSet ds = iter.next();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
 
