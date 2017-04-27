@@ -52,7 +52,6 @@ public class AlexNet implements TestableModel {
         double dropOut = 0.5;
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .workspaceMode(WorkspaceMode.SEPARATE)
                 .seed(seed)
                 .weightInit(WeightInit.DISTRIBUTION)
                 .dist(new NormalDistribution(0.0, 0.01))
@@ -75,7 +74,7 @@ public class AlexNet implements TestableModel {
                 .list()
                 .layer(0, new ConvolutionLayer.Builder(new int[]{11,11}, new int[]{4, 4}, new int[]{2,2})
                         .name("cnn1")
-                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
+                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .convolutionMode(ConvolutionMode.Truncate)
                         .nIn(channels)
                         .nOut(64)
@@ -87,7 +86,7 @@ public class AlexNet implements TestableModel {
                 .layer(2, new ConvolutionLayer.Builder(new int[]{5,5}, new int[]{2,2}, new int[]{2,2}) // TODO: fix input and put stride back to 1,1
                         .convolutionMode(ConvolutionMode.Truncate)
                         .name("cnn2")
-                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
+                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .nOut(192)
                         .biasInit(nonZeroBias)
                         .build())
@@ -96,18 +95,18 @@ public class AlexNet implements TestableModel {
                         .build())
                 .layer(4, new ConvolutionLayer.Builder(new int[]{3,3}, new int[]{1,1}, new int[]{1,1})
                         .name("cnn3")
-                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
+                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .nOut(384)
                         .build())
                 .layer(5, new ConvolutionLayer.Builder(new int[]{3,3}, new int[]{1,1}, new int[]{1,1})
                         .name("cnn4")
-                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
+                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .nOut(256)
                         .biasInit(nonZeroBias)
                         .build())
                 .layer(6, new ConvolutionLayer.Builder(new int[]{3,3}, new int[]{1,1}, new int[]{1,1})
                         .name("cnn5")
-                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.NO_WORKSPACE)
+                        .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .nOut(256)
                         .biasInit(nonZeroBias)
                         .build())
@@ -143,7 +142,9 @@ public class AlexNet implements TestableModel {
     }
 
     public MultiLayerNetwork init(){
-        MultiLayerNetwork network = new MultiLayerNetwork(conf());
+        MultiLayerConfiguration conf = conf();
+        conf.setWorkspaceMode(WorkspaceMode.SINGLE);
+        MultiLayerNetwork network = new MultiLayerNetwork(conf);
         network.init();
         return network;
 

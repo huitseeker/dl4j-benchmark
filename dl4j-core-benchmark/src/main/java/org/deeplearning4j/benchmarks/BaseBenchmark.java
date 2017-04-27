@@ -61,10 +61,12 @@ public abstract class BaseBenchmark {
 
             log.info("===== Benchmarking training iteration =====");
             profileStart(profile);
-            if(model instanceof MultiLayerNetwork)
+            if(model instanceof MultiLayerNetwork) {
                 ((MultiLayerNetwork) model).fit(iter);
-            if(model instanceof ComputationGraph)
+            }
+            if(model instanceof ComputationGraph) {
                 ((ComputationGraph) model).fit(iter);
+            }
             profileEnd("Fit", profile);
 
 
@@ -74,8 +76,8 @@ public abstract class BaseBenchmark {
                 and backward. This is consistent with benchmarks seen in the wild like this code:
                 https://github.com/jcjohnson/cnn-benchmarks/blob/master/cnn_benchmark.lua
              */
-            iter.reset(); // prevents NPE
             AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
+            Thread.sleep(10000);
 
             long totalForward = 0;
             long totalBackward = 0;
@@ -91,9 +93,9 @@ public abstract class BaseBenchmark {
 
 
                         // forward
-                        long forwardTime = System.nanoTime();
                         ((MultiLayerNetwork) model).setInput(input);
                         ((MultiLayerNetwork) model).setLabels(labels);
+                        long forwardTime = System.nanoTime();
                         ((MultiLayerNetwork) model).feedForward();
                         forwardTime = System.nanoTime() - forwardTime;
                         totalForward += (forwardTime / 1e6);
@@ -123,9 +125,9 @@ public abstract class BaseBenchmark {
                     try (MemoryWorkspace workspace = Nd4j.getWorkspaceManager().getAndActivateWorkspace(ComputationGraph.workspaceExternal)) {
 
                         // forward
-                        long forwardTime = System.nanoTime();
                         ((ComputationGraph) model).setInput(0, input);
                         ((ComputationGraph) model).setLabels(labels);
+                        long forwardTime = System.nanoTime();
                         ((ComputationGraph) model).feedForward();
                         forwardTime = System.nanoTime() - forwardTime;
                         totalForward += (forwardTime / 1e6);
