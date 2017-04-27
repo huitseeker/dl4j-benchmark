@@ -74,8 +74,8 @@ public abstract class BaseBenchmark {
                 and backward. This is consistent with benchmarks seen in the wild like this code:
                 https://github.com/jcjohnson/cnn-benchmarks/blob/master/cnn_benchmark.lua
              */
-            iter.reset(); // prevents NPE
             AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
+            Thread.sleep(10000);
 
             long totalForward = 0;
             long totalBackward = 0;
