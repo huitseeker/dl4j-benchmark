@@ -143,7 +143,6 @@ public class AlexNet implements TestableModel {
 
     public MultiLayerNetwork init(){
         MultiLayerConfiguration conf = conf();
-        conf.setWorkspaceMode(WorkspaceMode.SINGLE);
         MultiLayerNetwork network = new MultiLayerNetwork(conf);
         network.init();
         return network;

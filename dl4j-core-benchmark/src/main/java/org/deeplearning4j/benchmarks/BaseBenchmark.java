@@ -16,6 +16,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.parallelism.ParallelWrapper;
 import org.nd4j.linalg.api.memory.MemoryWorkspace;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.executioner.GridExecutioner;
 import org.nd4j.linalg.api.ops.executioner.OpExecutioner;
 import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -76,27 +77,27 @@ public abstract class BaseBenchmark {
                 and backward. This is consistent with benchmarks seen in the wild like this code:
                 https://github.com/jcjohnson/cnn-benchmarks/blob/master/cnn_benchmark.lua
              */
-            AsyncDataSetIterator adsi = new AsyncDataSetIterator(iter, 8, true);
-            Thread.sleep(10000);
+            iter.reset();
 
             long totalForward = 0;
             long totalBackward = 0;
             long nIterations = 0;
             if(model instanceof MultiLayerNetwork) {
                 profileStart(profile);
-                while(adsi.hasNext()) {
-                    DataSet ds = adsi.next();
+                while(iter.hasNext()) {
+                    try (MemoryWorkspace workspace = Nd4j.getWorkspaceManager().getAndActivateWorkspace(ComputationGraph.workspaceExternal)) {
+                    DataSet ds = iter.next();
+                    ds.migrate();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
-
-                    try (MemoryWorkspace workspace = Nd4j.getWorkspaceManager().getAndActivateWorkspace(ComputationGraph.workspaceExternal)) {
-
 
                         // forward
                         ((MultiLayerNetwork) model).setInput(input);
                         ((MultiLayerNetwork) model).setLabels(labels);
                         long forwardTime = System.nanoTime();
                         ((MultiLayerNetwork) model).feedForward();
+                        if (Nd4j.getExecutioner() instanceof GridExecutioner)
+                            ((GridExecutioner) Nd4j.getExecutioner()).flushQueueBlocking();
                         forwardTime = System.nanoTime() - forwardTime;
                         totalForward += (forwardTime / 1e6);
 
@@ -117,8 +118,8 @@ public abstract class BaseBenchmark {
                 profileEnd("Forward", profile);
             } else if(model instanceof ComputationGraph) {
                 profileStart(profile);
-                while(adsi.hasNext()) {
-                    DataSet ds = adsi.next();
+                while(iter.hasNext()) {
+                    DataSet ds = iter.next();
                     INDArray input = ds.getFeatures();
                     INDArray labels = ds.getLabels();
 

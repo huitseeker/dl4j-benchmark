@@ -12,15 +12,11 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.ResizeImageTransform;
-import org.deeplearning4j.datasets.datavec.ParallelRecordReaderDataSetIterator;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.datasets.iterator.ParallelExistingMiniBatchDataSetIterator;
 import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.nd4j.jita.conf.CudaEnvironment;
-import org.nd4j.linalg.dataset.ExistingMiniBatchDataSetIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -117,12 +113,7 @@ public class BenchmarkCustom extends BaseBenchmark {
         ImageTransform resize = new ResizeImageTransform(resizeDimension, resizeDimension);
         RecordReader trainRR = new ImageRecordReader(inputDimension, inputDimension, channels, labelMaker, resize);
         trainRR.initialize(split[0]);
-        DataSetIterator iter = new ParallelRecordReaderDataSetIterator.Builder(trainRR)
-                .setBatchSize(trainBatchSize)
-                .setNumberOfPossibleLabels(trainRR.getLabels().size())
-                .numberOfWorkers(2)
-                .prefetchBufferSize(4)
-                .build();
+        DataSetIterator iter = new RecordReaderDataSetIterator(trainRR, trainBatchSize);
 
         log.info("Preparing benchmarks for "+split[0].locations().length+" images, "+iter.getLabels().size()+" labels");
 
