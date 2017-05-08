@@ -40,12 +40,6 @@ public class BenchmarkCustom extends BaseBenchmark {
     public static int numLabels = -1;
     @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-batch")
     public static int trainBatchSize = 128;
-    @Option(name="--deviceCache",usage="Set CUDA device cache.",aliases = "-dcache")
-    public static long deviceCache = 6L;
-    @Option(name="--hostCache",usage="Set CUDA host cache.",aliases = "-hcache")
-    public static long hostCache = 12L;
-    @Option(name="--gcThreads",usage="Set Garbage Collection threads.",aliases = "-gcthreads")
-    public static int gcThreads = 5;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
     public static int gcWindow = 5000;
     @Option(name="--inputDimension",usage="The height and width of the dataset",aliases = "-dim")
