@@ -56,17 +56,33 @@ public abstract class BaseBenchmark {
             BenchmarkReport report = new BenchmarkReport(net.getKey().toString(), dimensions);
             report.setModel(model);
 
-            model.setListeners(new PerformanceListener(listenerFreq), new BenchmarkListener(report));
-//            model.setListeners(new PerformanceListener(1, true));
+            // ADSI
+            AsyncDataSetIterator asyncIter = new AsyncDataSetIterator(iter, 8, true);
 
 
             log.info("===== Benchmarking training iteration =====");
             profileStart(profile);
             if(model instanceof MultiLayerNetwork) {
-                ((MultiLayerNetwork) model).fit(iter);
+                // warm-up
+                for(int i = 0; i < 10; i++) {
+                    if(asyncIter.hasNext()) asyncIter.next();
+                    else asyncIter.reset();
+                }
+
+                // timing
+                model.setListeners(new PerformanceListener(listenerFreq), new BenchmarkListener(report));
+                ((MultiLayerNetwork) model).fit(asyncIter);
             }
             if(model instanceof ComputationGraph) {
-                ((ComputationGraph) model).fit(iter);
+                // warm-up
+                for(int i = 0; i < 10; i++) {
+                    if(asyncIter.hasNext()) asyncIter.next();
+                    else asyncIter.reset();
+                }
+
+                // timing
+                model.setListeners(new PerformanceListener(listenerFreq), new BenchmarkListener(report));
+                ((ComputationGraph) model).fit(asyncIter);
             }
             profileEnd("Fit", profile);
 

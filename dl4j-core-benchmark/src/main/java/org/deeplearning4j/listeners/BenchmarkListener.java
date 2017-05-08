@@ -87,9 +87,7 @@ public class BenchmarkListener implements IterationListener {
                 input = model.input();
             }
 
-            long tadLength = Shape.getTADLength(input.shape(), ArrayUtil.range(1, input.rank()));
-
-            long numSamples = input.lengthLong() / tadLength;
+            long numSamples = input.size(0);
 
             samplesPerSec.set((double) (numSamples / timeSec));
             batchesPerSec.set((double) (1 / timeSec));

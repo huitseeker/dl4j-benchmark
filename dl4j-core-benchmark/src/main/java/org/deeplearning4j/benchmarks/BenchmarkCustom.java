@@ -75,17 +75,6 @@ public class BenchmarkCustom extends BaseBenchmark {
         this.height = resizeDimension;
         this.width = resizeDimension;
 
-        // memory management optimizations
-//        CudaEnvironment.getInstance().getConfiguration()
-//                // key option enabled
-//                .allowMultiGPU(true)
-//                .allowCrossDeviceAccess(false)
-//                // we're allowing larger memory caches
-//                .setMaximumDeviceCache(0L * 1024L * 1024L * 1024L)
-//                .setMaximumHostCache(0L * 1024L * 1024L * 1024L)
-//                .setNumberOfGcThreads(5)
-//                .setNoGcWindowMs(gcWindow);
-
         Nd4j.create(1);
         Nd4j.getMemoryManager().togglePeriodicGc(false);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);
