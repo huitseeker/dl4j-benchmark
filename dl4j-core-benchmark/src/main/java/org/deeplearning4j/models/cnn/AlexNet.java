@@ -56,7 +56,7 @@ public class AlexNet implements TestableModel {
                 .weightInit(WeightInit.DISTRIBUTION)
                 .dist(new NormalDistribution(0.0, 0.01))
                 .activation(Activation.RELU)
-                .updater(Updater.SGD)
+                .updater(Updater.NONE)
                 .iterations(iterations)
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer) // normalize to prevent vanishing or exploding gradients
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
