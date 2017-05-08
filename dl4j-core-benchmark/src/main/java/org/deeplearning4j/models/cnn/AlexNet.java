@@ -68,6 +68,8 @@ public class AlexNet implements TestableModel {
                 .lrPolicySteps(100000)
                 .regularization(true)
                 .convolutionMode(ConvolutionMode.Same)
+                .trainingWorkspaceMode(WorkspaceMode.SINGLE)
+                .inferenceWorkspaceMode(WorkspaceMode.SINGLE)
                 .dropOut(0.5)
                 .l2(5 * 1e-4)
                 .miniBatch(false)
