@@ -21,7 +21,7 @@ public class BenchmarkCnn extends BaseBenchmark {
     @Option(name="--numLabels",usage="Train batch size.",aliases = "-labels")
     public static int numLabels = 1000;
     @Option(name="--totalIterations",usage="Train batch size.",aliases = "-iterations")
-    public static int totalIterations = 500;
+    public static int totalIterations = 300;
     @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-batch")
     public static int trainBatchSize = 128;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
@@ -34,7 +34,7 @@ public class BenchmarkCnn extends BaseBenchmark {
     private int height = 224;
     private int width = 224;
     private int channels = 3;
-    private String datasetName  = "CUSTOM";
+    private String datasetName  = "SIMULATEDCNN";
     private int seed = 42;
 
     public void run(String[] args) throws Exception {

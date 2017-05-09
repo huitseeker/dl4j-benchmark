@@ -26,13 +26,13 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.66 | 2.99  | 3.65  | 27.14  |
+|  2 | 8  | 10  | 17.98  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                           CUSTOM 16x3x224x224
+                 Description                     SIMULATEDCNN 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
@@ -42,11 +42,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.66
-           Avg Backprop (ms)                                          2.99
-          Avg Iteration (ms)                                         27.14
-             Avg Samples/sec                                        578.31
-             Avg Batches/sec                                         36.25
+        Avg Feedforward (ms)                                             2
+           Avg Backprop (ms)                                             8
+          Avg Iteration (ms)                                         17.98
+             Avg Samples/sec                                        866.57
+             Avg Batches/sec                                         54.16
 ```
 
 ### AlexNet 128x3x224x224
@@ -59,13 +59,13 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  0.82 | 10.6  | 11.42 | 53.38  |
+|  11 | 39  | 50 | 65.73  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                          CUSTOM 128x3x224x224
+                 Description                    SIMULATEDCNN 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
@@ -75,11 +75,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                          0.82
-           Avg Backprop (ms)                                          10.6
-          Avg Iteration (ms)                                         53.38
-             Avg Samples/sec                                       1904.22
-             Avg Batches/sec                                         15.45
+        Avg Feedforward (ms)                                            11
+           Avg Backprop (ms)                                            39
+          Avg Iteration (ms)                                         65.73
+             Avg Samples/sec                                       1895.18
+             Avg Batches/sec                                         14.81
 ```
 
 ## Running Benchmarks

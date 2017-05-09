@@ -112,8 +112,7 @@ public abstract class BaseBenchmark {
                         ((MultiLayerNetwork) model).setLabels(labels);
                         long forwardTime = System.nanoTime();
                         ((MultiLayerNetwork) model).feedForward();
-                        if (Nd4j.getExecutioner() instanceof GridExecutioner)
-                            ((GridExecutioner) Nd4j.getExecutioner()).flushQueueBlocking();
+                        Nd4j.getExecutioner().commit();
                         forwardTime = System.nanoTime() - forwardTime;
                         totalForward += (forwardTime / 1e6);
 
@@ -124,6 +123,7 @@ public abstract class BaseBenchmark {
 
                         backwardTime = System.nanoTime();
                         m.invoke(model);
+                        Nd4j.getExecutioner().commit();
                         backwardTime = System.nanoTime() - backwardTime;
                         totalBackward += (backwardTime / 1e6);
 
@@ -146,6 +146,7 @@ public abstract class BaseBenchmark {
                         ((ComputationGraph) model).setLabels(labels);
                         long forwardTime = System.nanoTime();
                         ((ComputationGraph) model).feedForward();
+                        Nd4j.getExecutioner().commit();
                         forwardTime = System.nanoTime() - forwardTime;
                         totalForward += (forwardTime / 1e6);
 
@@ -154,6 +155,7 @@ public abstract class BaseBenchmark {
                         Method m = ComputationGraph.class.getDeclaredMethod("calcBackpropGradients", boolean.class, INDArray[].class);
                         m.setAccessible(true);
                         m.invoke(model, false, null);
+                        Nd4j.getExecutioner().commit();
                         backwardTime = System.nanoTime() - backwardTime;
                         totalBackward += (backwardTime / 1e6);
 
