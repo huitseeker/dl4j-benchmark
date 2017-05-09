@@ -15,6 +15,7 @@ The following benchmarks have been run using the SNAPSHOT version of DL4J 0.8.1.
 This version utilizes workspace concepts and is significantly faster for inference
 than 0.8.0. The number of labels used for benchmarks was 1000. Note that for full
 training iteration timings, the number of labels and batch size impacts updater timing.
+CUDA_VISIBLE_DEVICES has been set to 1.
 
 ### AlexNet 16x3x224x224
 
@@ -26,7 +27,7 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  2 | 8  | 10  | 17.98  |
+|  2 | 8  | 10  | 16.68  |
 
 Full versioning and statistics:
 
@@ -34,7 +35,7 @@ Full versioning and statistics:
                         Name                                       ALEXNET
                  Description                     SIMULATEDCNN 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12779978752
+                     Devices              TITAN X (Pascal) 6 1 12782075904
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -44,9 +45,9 @@ Full versioning and statistics:
                 Total Layers                                            11
         Avg Feedforward (ms)                                             2
            Avg Backprop (ms)                                             8
-          Avg Iteration (ms)                                         17.98
-             Avg Samples/sec                                        866.57
-             Avg Batches/sec                                         54.16
+          Avg Iteration (ms)                                         16.68
+             Avg Samples/sec                                        935.17
+             Avg Batches/sec                                         58.45
 ```
 
 ### AlexNet 128x3x224x224
@@ -59,15 +60,14 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  11 | 39  | 50 | 65.73  |
+|  11 | 37.96  | 48.96 | 63.11  |
 
 Full versioning and statistics:
 
-```
                         Name                                       ALEXNET
                  Description                    SIMULATEDCNN 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12779978752
+                     Devices              TITAN X (Pascal) 6 1 12782075904
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -76,10 +76,10 @@ Full versioning and statistics:
                 Total Params                                      24400680
                 Total Layers                                            11
         Avg Feedforward (ms)                                            11
-           Avg Backprop (ms)                                            39
-          Avg Iteration (ms)                                         65.73
-             Avg Samples/sec                                       1895.18
-             Avg Batches/sec                                         14.81
+           Avg Backprop (ms)                                         37.96
+          Avg Iteration (ms)                                         63.11
+             Avg Samples/sec                                       1973.71
+             Avg Batches/sec                                         15.42
 ```
 
 ## Running Benchmarks

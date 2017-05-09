@@ -6,6 +6,7 @@ import org.deeplearning4j.models.ModelType;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -50,6 +51,11 @@ public class BenchmarkCnn extends BaseBenchmark {
 
         this.height = inputDimension;
         this.width = inputDimension;
+
+        // optimized for Titan X
+        CudaEnvironment.getInstance().getConfiguration()
+                .setMaximumBlockSize(768)
+                .setMinimumBlockSize(768);
 
         Nd4j.create(1);
         Nd4j.getMemoryManager().togglePeriodicGc(false);
