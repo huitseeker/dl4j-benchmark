@@ -82,6 +82,95 @@ Full versioning and statistics:
              Avg Batches/sec                                         15.42
 ```
 
+## LeNet 16x3x224x224
+
+DL4J summary (milliseconds):
+
+| Forward | Backward | Total  |  Training Iteration |
+|---|---|---|---|
+|  12 | 25  | 37 | 44.75  |
+
+Full versioning and statistics:
+
+```
+                        Name                                         LENET
+                 Description                     SIMULATEDCNN 16x3x224x224
+            Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
+                     Devices              TITAN X (Pascal) 6 1 12782075904
+                   CPU Cores                                            12
+                     Backend                                          CUDA
+                 BLAS Vendor                                        CUBLAS
+                CUDA Version                                          8000
+               CUDNN Version                                          6020
+                Total Params                                      70753070
+                Total Layers                                             6
+        Avg Feedforward (ms)                                            12
+           Avg Backprop (ms)                                            25
+          Avg Iteration (ms)                                         44.75
+             Avg Samples/sec                                        350.83
+             Avg Batches/sec                                         21.93
+```
+
+## LeNet 128x3x224x224
+
+DL4J summary (milliseconds):
+
+| Forward | Backward | Total  |  Training Iteration |
+|---|---|---|---|
+|  28.13 | 130.4  | 158.17 | 164.24  |
+
+Full versioning and statistics:
+
+```
+                        Name                                         LENET
+                 Description                    SIMULATEDCNN 128x3x224x224
+            Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
+                     Devices              TITAN X (Pascal) 6 1 12782075904
+                   CPU Cores                                            12
+                     Backend                                          CUDA
+                 BLAS Vendor                                        CUBLAS
+                CUDA Version                                          8000
+               CUDNN Version                                          6020
+                Total Params                                      70753070
+                Total Layers                                             6
+        Avg Feedforward (ms)                                         28.13
+           Avg Backprop (ms)                                         130.4
+          Avg Iteration (ms)                                        164.24
+             Avg Samples/sec                                        758.82
+             Avg Batches/sec                                          5.93
+```
+
+## VGG-16
+
+DL4J summary (milliseconds):
+
+This benchmark is analogous to VGG-16 Torch which is [available here](https://github.com/jcjohnson/cnn-benchmarks#vgg-16). The
+model uses 1,000 classes/outputs. All available optimizations have been applied.
+
+| Forward | Backward | Total  |  Training Iteration |
+|---|---|---|---|
+|  44.68 | 166.52  | 211.2 | 205.03  |
+
+```
+                        Name                                         VGG16
+                 Description                     SIMULATEDCNN 16x3x224x224
+            Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
+                     Devices              TITAN X (Pascal) 6 1 12782075904
+                   CPU Cores                                            12
+                     Backend                                          CUDA
+                 BLAS Vendor                                        CUBLAS
+                CUDA Version                                          8000
+               CUDNN Version                                          6020
+                Total Params                                      39803688
+                Total Layers                                            19
+        Avg Feedforward (ms)                                         44.68
+           Avg Backprop (ms)                                        166.52
+          Avg Iteration (ms)                                        205.03
+             Avg Samples/sec                                         75.95
+             Avg Batches/sec                                          4.75
+```
+
+
 ## Running Benchmarks
 
 Each core benchmark class uses specific parameters. You must build this repository before running benchmarks.
