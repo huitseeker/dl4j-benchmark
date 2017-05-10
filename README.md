@@ -64,6 +64,8 @@ DL4J summary (milliseconds):
 
 Full versioning and statistics:
 
+```
+
                         Name                                       ALEXNET
                  Description                    SIMULATEDCNN 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
@@ -150,6 +152,8 @@ model uses 1,000 classes/outputs. All available optimizations have been applied.
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
 |  44.68 | 166.52  | 211.2 | 205.03  |
+
+Full versioning and statistics:
 
 ```
                         Name                                         VGG16
