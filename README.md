@@ -65,7 +65,6 @@ DL4J summary (milliseconds):
 Full versioning and statistics:
 
 ```
-
                         Name                                       ALEXNET
                  Description                    SIMULATEDCNN 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
@@ -180,7 +179,7 @@ Full versioning and statistics:
 Each core benchmark class uses specific parameters. You must build this repository before running benchmarks.
 
 * First build using `mvn package -DskipTests`.
-* Then run specific benchmark class such as `java -cp /path/to/the.jar BenchmarkCifar -batch 128 -model ALEXNET`.
+* Then run specific benchmark class such as `java -cp /path/to/the.jar BenchmarkCnn -batch 128 -model ALEXNET`.
 
 ## Contributing
 
