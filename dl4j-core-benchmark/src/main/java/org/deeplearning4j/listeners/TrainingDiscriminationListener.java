@@ -28,7 +28,7 @@ public class TrainingDiscriminationListener implements TrainingListener {
     private final boolean reportRocArea;
     private final boolean reportScore;
 
-    private int yCount;
+    private int xCount;
     private List<Double> curveX;
     private List<Double> curveY;
 
@@ -53,19 +53,19 @@ public class TrainingDiscriminationListener implements TrainingListener {
     @Override
     public void iterationDone(Model model, int iteration) {
         if(iteration % frequency == 0) {
-            ++this.yCount;
+            ++this.xCount;
 
             // each score is treated as a point in a polygon
             // for the purpose of calculating area
-            curveX.add(model.score());
-            curveY.add((double) yCount);
+            curveX.add((double) xCount);
+            curveY.add(model.score());
 
             if(reportRocArea) {
                 // merge curve with two y=0 points to form proper polygon
-                double[] pointsX = ArrayUtils.addAll(new double[]{0.0, (double) yCount}, ArrayUtils.toPrimitive(curveX.toArray(new Double[0])));
+                double[] pointsX = ArrayUtils.addAll(new double[]{0.0, (double) xCount}, ArrayUtils.toPrimitive(curveX.toArray(new Double[0])));
                 double[] pointsY = ArrayUtils.addAll(new double[]{0.0, 0.0}, ArrayUtils.toPrimitive(curveY.toArray(new Double[0])));
                 double area = calculateArea(pointsX, pointsY, pointsX.length);
-                log.info("ROC curve area at iteration " + iteration + " is " + model.score());
+                log.info("Score curve area at iteration " + iteration + " is " + model.score());
             }
             if(reportScore) log.info("Score at iteration " + iteration + " is " + model.score());
         }
