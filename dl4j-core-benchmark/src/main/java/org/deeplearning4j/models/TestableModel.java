@@ -8,4 +8,6 @@ import org.deeplearning4j.nn.api.Model;
 public interface TestableModel {
 
     public Model init();
+
+    public ModelMetaData metaData();
 }

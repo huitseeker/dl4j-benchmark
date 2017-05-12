@@ -1,20 +1,10 @@
 package org.deeplearning4j.benchmarks;
 
 import lombok.extern.slf4j.Slf4j;
-import org.datavec.api.io.filters.BalancedPathFilter;
-import org.datavec.api.io.filters.PathFilter;
-import org.datavec.api.io.filters.RandomPathFilter;
-import org.datavec.api.io.labels.ParentPathLabelGenerator;
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.split.InputSplit;
-import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.ImageRecordReader;
-import org.datavec.image.transform.ImageTransform;
-import org.datavec.image.transform.ResizeImageTransform;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.datasets.iterator.ExistingDataSetIterator;
+import org.deeplearning4j.models.ModelSelector;
 import org.deeplearning4j.models.ModelType;
+import org.deeplearning4j.models.TestableModel;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -23,12 +13,10 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.nd4j.linalg.learning.Nesterovs;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 /**
  * Benchmarks popular CNN models using the CIFAR-10 dataset.
@@ -103,7 +91,13 @@ public class BenchmarkMlpRnn extends BaseBenchmark {
 
         DataSetIterator iter = new ExistingDataSetIterator(l);
 
-        benchmark(inputDimension, -1, -1, outputDimension, trainBatchSize, seed, "random", iter, modelType, profile);
+        log.info("Building models for "+modelType+"....");
+        networks = ModelSelector.select(modelType, new int[]{inputDimension}, outputDimension, seed, iterations);
+
+        for (Map.Entry<ModelType, TestableModel> net : networks.entrySet()) {
+            String description = net.getKey().toString()+" 1x"+inputDimension;
+            benchmark(net, description, outputDimension, trainBatchSize, seed, "random", iter, modelType, profile);
+        }
     }
 
     public static void main(String[] args) throws Exception {

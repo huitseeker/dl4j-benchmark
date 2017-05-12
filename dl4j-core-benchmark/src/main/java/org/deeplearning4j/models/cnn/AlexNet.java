@@ -1,5 +1,7 @@
 package org.deeplearning4j.models.cnn;
 
+import org.deeplearning4j.models.ModelMetaData;
+import org.deeplearning4j.models.ModelType;
 import org.deeplearning4j.models.TestableModel;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.*;
@@ -31,17 +33,12 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
  */
 public class AlexNet implements TestableModel {
 
-    private int height;
-    private int width;
-    private int channels;
+    private int[] inputShape = new int[]{3,224,224};
     private int numLabels = 1000;
     private long seed = 42;
     private int iterations = 90;
 
-    public AlexNet(int height, int width, int channels, int numLabels, long seed, int iterations) {
-        this.height = height;
-        this.width = width;
-        this.channels = channels;
+    public AlexNet(int numLabels, long seed, int iterations) {
         this.numLabels = numLabels;
         this.seed = seed;
         this.iterations = iterations;
@@ -74,7 +71,7 @@ public class AlexNet implements TestableModel {
                         .name("cnn1")
                         .cudnnAlgoMode(ConvolutionLayer.AlgoMode.PREFER_FASTEST)
                         .convolutionMode(ConvolutionMode.Truncate)
-                        .nIn(channels)
+                        .nIn(inputShape[0])
                         .nOut(64)
                         .build())
                 .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX, new int[]{3,3}, new int[]{2,2}, new int[]{1,1})
@@ -133,7 +130,7 @@ public class AlexNet implements TestableModel {
                         .build())
                 .backprop(true)
                 .pretrain(false)
-                .setInputType(InputType.convolutional(height,width,channels))
+                .setInputType(InputType.convolutionalFlat(inputShape[2],inputShape[1],inputShape[0]))
                 .build();
 
         return conf;
@@ -145,6 +142,14 @@ public class AlexNet implements TestableModel {
         network.init();
         return network;
 
+    }
+
+    public ModelMetaData metaData(){
+        return new ModelMetaData(
+                new int[][]{inputShape},
+                1,
+                ModelType.CNN
+        );
     }
 
 }

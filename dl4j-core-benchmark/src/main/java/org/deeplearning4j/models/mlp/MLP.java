@@ -1,6 +1,8 @@
 package org.deeplearning4j.models.mlp;
 
 import lombok.AllArgsConstructor;
+import org.deeplearning4j.models.ModelMetaData;
+import org.deeplearning4j.models.ModelType;
 import org.deeplearning4j.models.TestableModel;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -53,5 +55,13 @@ public class MLP implements TestableModel {
         MultiLayerNetwork network = new MultiLayerNetwork(conf());
         network.init();
         return network;
+    }
+
+    public ModelMetaData metaData(){
+        return new ModelMetaData(
+                new int[][]{new int[]{inputSize}},
+                1,
+                ModelType.MLP_SMALL
+        );
     }
 }

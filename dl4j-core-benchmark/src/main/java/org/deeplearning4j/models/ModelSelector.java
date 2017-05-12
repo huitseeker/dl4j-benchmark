@@ -14,46 +14,42 @@ import java.util.Map;
  * Helper class for easily selecting multiple models for benchmarking.
  */
 public class ModelSelector {
-    public static Map<ModelType,TestableModel> select(ModelType modelType, int height, int width, int channels, int numLabels, int seed, int iterations) {
+    public static Map<ModelType,TestableModel> select(ModelType modelType, int[] inputShape, int numLabels, int seed, int iterations) {
         Map<ModelType,TestableModel> netmap = new HashMap<>();
 
         switch(modelType) {
             case ALL:
-                netmap.putAll(ModelSelector.select(ModelType.CNN, height, width, channels, numLabels, seed, iterations));
-                netmap.putAll(ModelSelector.select(ModelType.RNN, height, width, channels, numLabels, seed, iterations));
+                netmap.putAll(ModelSelector.select(ModelType.CNN, null, numLabels, seed, iterations));
+                netmap.putAll(ModelSelector.select(ModelType.RNN, null, numLabels, seed, iterations));
                 break;
             // CNN models
             case CNN:
-                netmap.putAll(ModelSelector.select(ModelType.ALEXNET, height, width, channels, numLabels, seed, iterations));
-                netmap.putAll(ModelSelector.select(ModelType.GOOGLELENET, height, width, channels, numLabels, seed, iterations));
-                netmap.putAll(ModelSelector.select(ModelType.VGG16, height, width, channels, numLabels, seed, iterations));
+                netmap.putAll(ModelSelector.select(ModelType.ALEXNET, null, numLabels, seed, iterations));
+                netmap.putAll(ModelSelector.select(ModelType.VGG16, null, numLabels, seed, iterations));
                 break;
             case ALEXNET:
-                netmap.put(ModelType.ALEXNET, new AlexNet(height, width, channels, numLabels, seed, iterations));
+                netmap.put(ModelType.ALEXNET, new AlexNet(numLabels, seed, iterations));
                 break;
             case LENET:
-                netmap.put(ModelType.LENET, new LeNet(height, width, channels, numLabels, seed, iterations));
-                break;
-            case GOOGLELENET:
-                netmap.put(ModelType.GOOGLELENET, new GoogleLeNet(height, width, channels, numLabels, seed, iterations));
+                netmap.put(ModelType.LENET, new LeNet(numLabels, seed, iterations));
                 break;
             case INCEPTIONRESNETV1:
-                netmap.put(ModelType.INCEPTIONRESNETV1, new InceptionResNetV1(height, width, channels, numLabels, seed, iterations));
+                netmap.put(ModelType.INCEPTIONRESNETV1, new InceptionResNetV1(numLabels, seed, iterations));
                 break;
             case FACENETNN4:
-                netmap.put(ModelType.FACENETNN4, new FaceNetNN4(height, width, channels, numLabels, seed, iterations));
+                netmap.put(ModelType.FACENETNN4, new FaceNetNN4(numLabels, seed, iterations));
                 break;
             case VGG16:
-                netmap.put(ModelType.VGG16, new VGG16(height, width, channels, numLabels, seed, iterations));
+                netmap.put(ModelType.VGG16, new VGG16(numLabels, seed, iterations));
                 break;
             case MLP_SMALL:
-                netmap.put(ModelType.MLP_SMALL, new MLP(height, new int[]{512,512,512},numLabels, seed, Updater.ADAM ));
+                netmap.put(ModelType.MLP_SMALL, new MLP(inputShape[0], new int[]{512,512,512},numLabels, seed, Updater.ADAM ));
                 break;
 
             // RNN models
             case RNN:
             case RNN_SMALL:
-                netmap.put(ModelType.RNN_SMALL, new RNN(height, new int[]{256,256},numLabels, seed, Updater.RMSPROP ));
+                netmap.put(ModelType.RNN_SMALL, new RNN(inputShape[0], new int[]{256,256},numLabels, seed, Updater.RMSPROP ));
                 break;
             default:
 //                // do nothing

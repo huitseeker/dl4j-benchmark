@@ -1,14 +1,19 @@
 package org.deeplearning4j.benchmarks;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ArrayUtils;
 import org.deeplearning4j.datasets.iterator.impl.BenchmarkDataSetIterator;
+import org.deeplearning4j.models.ModelSelector;
 import org.deeplearning4j.models.ModelType;
+import org.deeplearning4j.models.TestableModel;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.nd4j.jita.conf.CudaEnvironment;
+//import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
+
+import java.util.Map;
 
 /**
  * Benchmarks popular CNN models using the CIFAR-10 dataset.
@@ -23,18 +28,13 @@ public class BenchmarkCnn extends BaseBenchmark {
     public static int numLabels = 1000;
     @Option(name="--totalIterations",usage="Train batch size.",aliases = "-iterations")
     public static int totalIterations = 300;
-    @Option(name="--trainBatchSize",usage="Train batch size.",aliases = "-batch")
-    public static int trainBatchSize = 128;
+    @Option(name="--batchSize",usage="Train batch size.",aliases = "-batch")
+    public static int batchSize = 128;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
     public static int gcWindow = 5000;
-    @Option(name="--inputDimension",usage="The height and width of the dataset",aliases = "-dim")
-    public static int inputDimension = 224;
     @Option(name="--profile",usage="Run profiler and print results",aliases = "-profile")
     public static boolean profile = false;
 
-    private int height = 224;
-    private int width = 224;
-    private int channels = 3;
     private String datasetName  = "SIMULATEDCNN";
     private int seed = 42;
 
@@ -49,31 +49,36 @@ public class BenchmarkCnn extends BaseBenchmark {
             parser.printUsage(System.err);
         }
 
-        this.height = inputDimension;
-        this.width = inputDimension;
+        log.info("Building models for "+modelType+"....");
+        networks = ModelSelector.select(modelType, null, numLabels, seed, iterations);
 
-        // optimized for Titan X
-        CudaEnvironment.getInstance().getConfiguration()
-                .setMaximumBlockSize(768)
-                .setMinimumBlockSize(768);
+        for (Map.Entry<ModelType, TestableModel> net : networks.entrySet()) {
+            int[][] inputShape = net.getValue().metaData().getInputShape();
+            String description = datasetName + " " + batchSize + "x" + inputShape[0][0] + "x" + inputShape[0][1] + "x" + inputShape[0][2];
+            log.info("Selected: " + net.getKey().toString() + " " + description);
+
+            log.info("Preparing benchmarks for " + totalIterations + " iterations, " + numLabels + " labels");
+            int[] iterShape = ArrayUtils.addAll(new int[]{batchSize}, inputShape[0]);
+            DataSetIterator iter = new BenchmarkDataSetIterator(iterShape, numLabels, totalIterations);
+
+            benchmark(net, description, numLabels, batchSize, seed, datasetName, iter, modelType, profile);
+        }
+
+        System.exit(0);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+//        // optimized for Titan X
+//        CudaEnvironment.getInstance().getConfiguration()
+//                .setMaximumBlockSize(768)
+//                .setMinimumBlockSize(768);
 
         Nd4j.create(1);
         Nd4j.getMemoryManager().togglePeriodicGc(false);
         Nd4j.getMemoryManager().setAutoGcWindow(gcWindow);
         Nd4j.getMemoryManager().setOccasionalGcFrequency(0);
 
-        log.info("Loading data...");
-        int[] shape = new int[]{trainBatchSize, 3, 224, 224};
-        DataSetIterator iter = new BenchmarkDataSetIterator(shape, numLabels, totalIterations);
-
-        log.info("Preparing benchmarks for "+totalIterations+" iterations, "+numLabels+" labels");
-
-        benchmark(height, width, channels, numLabels, trainBatchSize, seed, datasetName, iter, modelType, profile);
-
-        System.exit(0);
-    }
-
-    public static void main(String[] args) throws Exception {
         new BenchmarkCnn().run(args);
     }
 }

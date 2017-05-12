@@ -1,5 +1,7 @@
 package org.deeplearning4j.models.cnn;
 
+import org.deeplearning4j.models.ModelMetaData;
+import org.deeplearning4j.models.ModelType;
 import org.deeplearning4j.models.TestableModel;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -25,17 +27,12 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class LeNet implements TestableModel {
 
-    private static int height;
-    private static int width;
-    private static int channels;
+    private int[] inputShape = new int[]{3,224,224};
     private int numLabels;
     private long seed;
     private int iterations;
 
-    public LeNet(int height, int width, int channels, int numLabels, long seed, int iterations) {
-        this.height = height;
-        this.width = width;
-        this.channels = channels;
+    public LeNet(int numLabels, long seed, int iterations) {
         this.numLabels = numLabels;
         this.seed = seed;
         this.iterations = iterations;
@@ -59,7 +56,7 @@ public class LeNet implements TestableModel {
                 .list()
                 .layer(0, new ConvolutionLayer.Builder(new int[]{5, 5}, new int[]{1, 1})
                         .name("cnn1")
-                        .nIn(channels)
+                        .nIn(inputShape[0])
                         .nOut(20)
                         .build())
                 .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX, new int[]{2, 2}, new int[]{2, 2})
@@ -82,7 +79,7 @@ public class LeNet implements TestableModel {
                         .nOut(numLabels)
                         .activation(Activation.SOFTMAX) // radial basis function required
                         .build())
-                .setInputType(InputType.convolutionalFlat(height,width,channels))
+                .setInputType(InputType.convolutionalFlat(inputShape[2],inputShape[1],inputShape[0]))
                 .backprop(true).pretrain(false).build();
 
         return conf;
@@ -93,5 +90,13 @@ public class LeNet implements TestableModel {
         MultiLayerNetwork network = new MultiLayerNetwork(conf());
         network.init();
         return network;
+    }
+
+    public ModelMetaData metaData(){
+        return new ModelMetaData(
+                new int[][]{inputShape},
+                1,
+                ModelType.CNN
+        );
     }
 }
