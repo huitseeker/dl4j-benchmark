@@ -65,7 +65,7 @@ public class TrainingDiscriminationListener implements TrainingListener {
                 double[] pointsX = ArrayUtils.addAll(new double[]{0.0, (double) xCount}, ArrayUtils.toPrimitive(curveX.toArray(new Double[0])));
                 double[] pointsY = ArrayUtils.addAll(new double[]{0.0, 0.0}, ArrayUtils.toPrimitive(curveY.toArray(new Double[0])));
                 double area = calculateArea(pointsX, pointsY, pointsX.length);
-                log.info("Score curve area at iteration " + iteration + " is " + model.score());
+                log.info("Score curve area at iteration " + iteration + " is " + area);
             }
             if(reportScore) log.info("Score at iteration " + iteration + " is " + model.score());
         }
