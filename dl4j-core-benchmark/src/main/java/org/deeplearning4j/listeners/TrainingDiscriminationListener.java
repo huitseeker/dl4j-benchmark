@@ -32,6 +32,14 @@ public class TrainingDiscriminationListener implements TrainingListener {
     private List<Double> curveX;
     private List<Double> curveY;
 
+    public TrainingDiscriminationListener() {
+        this(1, false, true);
+    }
+
+    public TrainingDiscriminationListener(int frequency) {
+        this(frequency, false, true);
+    }
+
     public TrainingDiscriminationListener(int frequency, boolean reportScore, boolean reportRocArea) {
         this.frequency = frequency;
         this.reportRocArea = reportRocArea;
@@ -61,9 +69,12 @@ public class TrainingDiscriminationListener implements TrainingListener {
             curveY.add(model.score());
 
             if(reportRocArea) {
+                // add bottom right coordinates
+                curveX.add((double) xCount);
+                curveY.add(0.0);
                 // merge curve with two y=0 points to form proper polygon
-                double[] pointsX = ArrayUtils.addAll(new double[]{0.0, (double) xCount}, ArrayUtils.toPrimitive(curveX.toArray(new Double[0])));
-                double[] pointsY = ArrayUtils.addAll(new double[]{0.0, 0.0}, ArrayUtils.toPrimitive(curveY.toArray(new Double[0])));
+                double[] pointsX = ArrayUtils.addAll(new double[]{0.0}, ArrayUtils.toPrimitive(curveX.toArray(new Double[0])));
+                double[] pointsY = ArrayUtils.addAll(new double[]{0.0}, ArrayUtils.toPrimitive(curveY.toArray(new Double[0])));
                 double area = calculateArea(pointsX, pointsY, pointsX.length);
                 log.info("Score curve area at iteration " + iteration + " is " + area);
             }

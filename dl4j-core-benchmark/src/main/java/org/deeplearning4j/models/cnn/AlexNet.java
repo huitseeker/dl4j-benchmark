@@ -63,6 +63,7 @@ public class AlexNet implements TestableModel {
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer) // normalize to prevent vanishing or exploding gradients
                 .trainingWorkspaceMode(WorkspaceMode.SINGLE)
                 .inferenceWorkspaceMode(WorkspaceMode.SINGLE)
+                .cacheMode(CacheMode.DEVICE)
                 .dropOut(0.5)
                 .l2(5 * 1e-4)
                 .miniBatch(false)

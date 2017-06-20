@@ -4,10 +4,7 @@ import org.deeplearning4j.models.ModelMetaData;
 import org.deeplearning4j.models.ModelType;
 import org.deeplearning4j.models.TestableModel;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.Updater;
-import org.deeplearning4j.nn.conf.WorkspaceMode;
+import org.deeplearning4j.nn.conf.*;
 import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -40,6 +37,7 @@ public class VGG16 implements TestableModel {
                 .activation(Activation.RELU)
                 .trainingWorkspaceMode(WorkspaceMode.SINGLE)
                 .inferenceWorkspaceMode(WorkspaceMode.SINGLE)
+                .cacheMode(CacheMode.DEVICE)
                 .list()
                 .layer(0, new ConvolutionLayer.Builder().kernelSize(3, 3).stride(1, 1).padding(1, 1)
                         .nIn(inputShape[0])

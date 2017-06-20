@@ -5,6 +5,7 @@ import org.datavec.image.recordreader.ImageRecordReader;
 import org.deeplearning4j.datasets.iterator.AsyncDataSetIterator;
 import org.deeplearning4j.listeners.BenchmarkListener;
 import org.deeplearning4j.listeners.BenchmarkReport;
+import org.deeplearning4j.listeners.TrainingDiscriminationListener;
 import org.deeplearning4j.models.ModelSelector;
 import org.deeplearning4j.models.ModelType;
 import org.deeplearning4j.models.TestableModel;
@@ -63,7 +64,7 @@ public abstract class BaseBenchmark {
             }
         }
 
-        model.setListeners(new PerformanceListener(1), new BenchmarkListener(report));
+        model.setListeners(new PerformanceListener(1), new BenchmarkListener(report), new TrainingDiscriminationListener());
 
         log.info("===== Benchmarking training iteration =====");
         profileStart(profile);
