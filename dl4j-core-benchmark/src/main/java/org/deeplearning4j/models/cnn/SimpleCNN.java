@@ -26,7 +26,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 @NoArgsConstructor
 public class SimpleCNN implements TestableModel {
 
-    private int[] inputShape = new int[] {3, 148, 148};
+    private int[] inputShape = new int[] {3, 128, 128};
     private int numLabels;
     private long seed;
     private int iterations;
