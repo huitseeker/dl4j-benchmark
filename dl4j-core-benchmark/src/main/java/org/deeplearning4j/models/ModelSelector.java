@@ -27,6 +27,9 @@ public class ModelSelector {
                 netmap.putAll(ModelSelector.select(ModelType.ALEXNET, null, numLabels, seed, iterations));
                 netmap.putAll(ModelSelector.select(ModelType.VGG16, null, numLabels, seed, iterations));
                 break;
+            case SIMPLECNN:
+                netmap.put(ModelType.SIMPLECNN, new SimpleCNN(numLabels, seed, iterations));
+                break;
             case ALEXNET:
                 netmap.put(ModelType.ALEXNET, new AlexNet(numLabels, seed, iterations));
                 break;

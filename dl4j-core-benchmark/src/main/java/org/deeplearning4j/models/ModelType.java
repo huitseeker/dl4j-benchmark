@@ -6,6 +6,7 @@ package org.deeplearning4j.models;
 public enum ModelType {
     ALL,
     CNN,
+    SIMPLECNN,
     ALEXNET,
     LENET,
     GOOGLELENET,

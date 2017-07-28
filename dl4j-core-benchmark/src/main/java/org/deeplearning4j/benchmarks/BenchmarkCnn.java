@@ -27,7 +27,7 @@ public class BenchmarkCnn extends BaseBenchmark {
     @Option(name="--numLabels",usage="Train batch size.",aliases = "-labels")
     public static int numLabels = 1000;
     @Option(name="--totalIterations",usage="Train batch size.",aliases = "-iterations")
-    public static int totalIterations = 300;
+    public static int totalIterations = 10;
     @Option(name="--batchSize",usage="Train batch size.",aliases = "-batch")
     public static int batchSize = 128;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
