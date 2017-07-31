@@ -9,6 +9,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by Alex on 31/07/2017.
@@ -31,18 +32,33 @@ public class GemmBenchmarks {
 
         @Override
         public String toString(){
-            return "([" + a + "," + b + "," + c + "],[" + xO + yO + zO + "],nT=" + nTests + ",reuse=" + reuseArrays + ",gc=" + gcFirst + ")";
+            return a + "," + b + "," + c + "," + xO + yO + zO + "," + nTests + "," + reuseArrays + "," + gcFirst;
+        }
+
+        public static String getHeader(){
+            return "a,b,c,xOrder,yOrder,zOrder,nTests,reuseArrays,gcFirst";
         }
     }
 
 
     public static void main(String[] args) throws Exception {
 
+        Properties p = Nd4j.getExecutioner().getEnvironmentInformation();
+        System.out.println(p);
+        Object os = p.get("os");
+        Object blasThreads = p.get("blas.threads");
+        Object backend = p.get("backend");
+        Object ompThreads = p.get("omp.threads");
+        Object vendor = p.get("blas.vendor");
+
+        String env = os + "," + backend + "," + vendor + "," + blasThreads;
+        String envH = "os,backend,vendor,blasThreads";
 
 
         List<TestCase> testCases = getTestCases();
 
 
+        System.out.println(envH + "," + TestCase.getHeader() + ",meanNs,medianNs,p90Ns");
         for(TestCase tc : testCases ){
 
             if(tc.isGcFirst()){
@@ -95,7 +111,8 @@ public class GemmBenchmarks {
             int p90pos = (int)(0.9 * times.length);
             double p90 = times[p90pos];
 
-            log.info("{}, mean = {}, median = {}, p90 = {}", tc, mean, median, p90);
+//            log.info("{}, mean = {}, median = {}, p90 = {}", tc, mean, median, p90);
+            System.out.println(env + "," + tc + "," + mean + "," + median + "," + p90);
         }
     }
 
