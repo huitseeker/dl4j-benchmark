@@ -36,12 +36,14 @@ public class GemmBenchmarks {
         }
 
         public static String getHeader(){
-            return "a,b,c,xOrder,yOrder,zOrder,nTests,reuseArrays,gcFirst";
+            return "a,b,c,orders,nTests,reuseArrays,gcFirst";
         }
     }
 
 
     public static void main(String[] args) throws Exception {
+
+        System.out.println("PATH:" + System.getenv("PATH"));
 
         Properties p = Nd4j.getExecutioner().getEnvironmentInformation();
         System.out.println(p);
@@ -134,13 +136,18 @@ public class GemmBenchmarks {
 
         List<TestCase> l = new ArrayList<>();
 
+//        int[] sizesA = new int[]{16, 64, 256, 1024, 4096, 16384};
+        int[] sizesA = new int[]{16, 64, 256, 1024, 4096};
+        int[] sizesB = sizesA;
+        int[] sizesC = sizesA;
+
         char[] o = {'c','f'};
         for( char xo : o){
             for( char yo : o ){
                 for( char zo : o ){
-                    for(int a : new int[]{16, 64, 256, 1024, 4096, 16384}){
-                        for(int b : new int[]{16, 64, 256, 1024, 4096, 16384}){
-                            for(int c : new int[]{16, 64, 256, 1024, 4096, 16384}){
+                    for(int a : sizesA ){
+                        for(int b : sizesB){
+                            for(int c : sizesC){
                                 l.add(new TestCase(a, b, c, xo, yo, zo, 100, true, true));
                             }
                         }
