@@ -4,6 +4,8 @@ Benchmarks popular models and configurations on Deeplearning4j, and output perfo
 
 #### Core Benchmarks
 
+* BenchmarkCnn: simulates input like most benchmarking tools
+    * Comes with variety of convolutional models including VGG-16, LeNet, and AlexNet
 * BenchmarkCifar: uses the CIFAR-10 dataset to benchmark CNN models
     * MLP: using simple, single layer feed forward with MNIST data 
     * Lenet: using common LeNet CNN model with MNIST data
@@ -11,7 +13,7 @@ Benchmarks popular models and configurations on Deeplearning4j, and output perfo
 
 ## Top Benchmarks
 
-The following benchmarks have been run using the SNAPSHOT version of DL4J 0.8.1.
+The following benchmarks have been run using the SNAPSHOT version of DL4J 0.9.1.
 This version utilizes workspace concepts and is significantly faster for inference
 than 0.8.0. The number of labels used for benchmarks was 1000. Note that for full
 training iteration timings, the number of labels and batch size impacts updater timing.
@@ -27,15 +29,15 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  2 | 8  | 10  | 16.68  |
+|  2 | 5.01  | 7.01  | 14.33  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                     SIMULATEDCNN 16x3x224x224
+                 Description                            VGG16 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12782075904
+                     Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -44,10 +46,10 @@ Full versioning and statistics:
                 Total Params                                      24400680
                 Total Layers                                            11
         Avg Feedforward (ms)                                             2
-           Avg Backprop (ms)                                             8
-          Avg Iteration (ms)                                         16.68
-             Avg Samples/sec                                        935.17
-             Avg Batches/sec                                         58.45
+           Avg Backprop (ms)                                          5.01
+          Avg Iteration (ms)                                         14.33
+             Avg Samples/sec                                       1075.93
+             Avg Batches/sec                                         67.25
 ```
 
 ### AlexNet 128x3x224x224
@@ -60,15 +62,15 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  11 | 37.96  | 48.96 | 63.11  |
+|  10 | 33.32  | 43.32 | 58.58  |
 
 Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                    SIMULATEDCNN 128x3x224x224
+                 Description                           ALEXNET 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12782075904
+                     Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -76,11 +78,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      24400680
                 Total Layers                                            11
-        Avg Feedforward (ms)                                            11
-           Avg Backprop (ms)                                         37.96
-          Avg Iteration (ms)                                         63.11
-             Avg Samples/sec                                       1973.71
-             Avg Batches/sec                                         15.42
+        Avg Feedforward (ms)                                            10
+           Avg Backprop (ms)                                         33.32
+          Avg Iteration (ms)                                         58.58
+             Avg Samples/sec                                        2098.4
+             Avg Batches/sec                                         16.39
 ```
 
 ## LeNet 16x3x224x224
@@ -89,15 +91,15 @@ DL4J summary (milliseconds):
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  12 | 25  | 37 | 44.75  |
+|  5 | 18.02  | 23.02 | 35.28  |
 
 Full versioning and statistics:
 
 ```
                         Name                                         LENET
-                 Description                     SIMULATEDCNN 16x3x224x224
+                 Description                            LENET 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12782075904
+                     Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -105,11 +107,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      70753070
                 Total Layers                                             6
-        Avg Feedforward (ms)                                            12
-           Avg Backprop (ms)                                            25
-          Avg Iteration (ms)                                         44.75
-             Avg Samples/sec                                        350.83
-             Avg Batches/sec                                         21.93
+        Avg Feedforward (ms)                                             5
+           Avg Backprop (ms)                                         18.02
+          Avg Iteration (ms)                                         35.28
+             Avg Samples/sec                                        435.66
+             Avg Batches/sec                                         27.23
 ```
 
 ## LeNet 128x3x224x224
@@ -150,15 +152,15 @@ model uses 1,000 classes/outputs. All available optimizations have been applied.
 
 | Forward | Backward | Total  |  Training Iteration |
 |---|---|---|---|
-|  44.68 | 166.52  | 211.2 | 205.03  |
+|  44.24 | 129.04  | 173.28 | 178.39  |
 
 Full versioning and statistics:
 
 ```
                         Name                                         VGG16
-                 Description                     SIMULATEDCNN 16x3x224x224
+                 Description                            VGG16 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
-                     Devices              TITAN X (Pascal) 6 1 12782075904
+                     Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
                      Backend                                          CUDA
                  BLAS Vendor                                        CUBLAS
@@ -166,11 +168,11 @@ Full versioning and statistics:
                CUDNN Version                                          6020
                 Total Params                                      39803688
                 Total Layers                                            19
-        Avg Feedforward (ms)                                         44.68
-           Avg Backprop (ms)                                        166.52
-          Avg Iteration (ms)                                        205.03
-             Avg Samples/sec                                         75.95
-             Avg Batches/sec                                          4.75
+        Avg Feedforward (ms)                                         44.24
+           Avg Backprop (ms)                                        129.04
+          Avg Iteration (ms)                                        178.39
+             Avg Samples/sec                                         86.15
+             Avg Batches/sec                                          5.38
 ```
 
 

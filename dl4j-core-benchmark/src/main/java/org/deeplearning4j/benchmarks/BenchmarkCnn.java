@@ -23,11 +23,11 @@ public class BenchmarkCnn extends BaseBenchmark {
 
     // values to pass in from command line when compiled, esp running remotely
     @Option(name = "--modelType", usage = "Model type (e.g. ALEXNET, VGG16, or CNN).", aliases = "-model")
-    public static ModelType modelType = ModelType.ALEXNET;
+    public static ModelType modelType = ModelType.VGG16;
     @Option(name="--numLabels",usage="Train batch size.",aliases = "-labels")
     public static int numLabels = 1000;
     @Option(name="--totalIterations",usage="Train batch size.",aliases = "-iterations")
-    public static int totalIterations = 10;
+    public static int totalIterations = 200;
     @Option(name="--batchSize",usage="Train batch size.",aliases = "-batch")
     public static int batchSize = 128;
     @Option(name="--gcWindow",usage="Set Garbage Collection window in milliseconds.",aliases = "-gcwindow")
@@ -35,7 +35,7 @@ public class BenchmarkCnn extends BaseBenchmark {
     @Option(name="--profile",usage="Run profiler and print results",aliases = "-profile")
     public static boolean profile = false;
 
-    private String datasetName  = "SIMULATEDCNN";
+    private String datasetName  = modelType.toString();
     private int seed = 42;
 
     public void run(String[] args) throws Exception {

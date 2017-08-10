@@ -33,7 +33,7 @@ public class VGG16 implements TestableModel {
     public MultiLayerConfiguration conf() {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .updater(Updater.NESTEROVS)
+                .updater(Updater.NONE)
                 .activation(Activation.RELU)
                 .trainingWorkspaceMode(WorkspaceMode.SINGLE)
                 .inferenceWorkspaceMode(WorkspaceMode.SINGLE)
