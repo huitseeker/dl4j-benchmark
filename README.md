@@ -35,7 +35,7 @@ Full versioning and statistics:
 
 ```
                         Name                                       ALEXNET
-                 Description                            VGG16 16x3x224x224
+                 Description                            ALEXNET 16x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12779978752
                    CPU Cores                                            12
@@ -126,7 +126,7 @@ Full versioning and statistics:
 
 ```
                         Name                                         LENET
-                 Description                    SIMULATEDCNN 128x3x224x224
+                 Description                           LENET 128x3x224x224
             Operating System                  GNU/Linux Ubuntu 16.04.2 LTS
                      Devices              TITAN X (Pascal) 6 1 12782075904
                    CPU Cores                                            12
